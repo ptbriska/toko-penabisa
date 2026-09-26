@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Katalog Buku - Toko Penerbit Pena Bisa</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="katalog">
+
+  <!-- HEADER GLOBAL -->
+  <header class="navbar">
+    <div class="navbar-brand">
+      <a href="index.html" class="logo">Toko Pena Bisa</a>
+    </div>
+    <nav class="nav-menu">
+      <a href="index.html">Beranda</a>
+      <a href="katalog.html" class="active">Katalog</a>
+      <a href="bundling.html">Paket Bundling</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="search-box">
+        <input type="text" id="katalogSearch" placeholder="Cari buku di katalog..." oninput="filterCatalog()">
+      </div>
+      <button class="btn-cart-nav" onclick="toggleCartModal()">
+        🛒 Keranjang <span id="cartBadge" class="badge">0</span>
+      </button>
+      <a href="https://penabisa.com" target="_blank" rel="noopener" class="btn-shortcut">Web Penerbit ↗</a>
+    </div>
+  </header>
+
+  <!-- LAYOUT KATALOG TOKOPEDIA STYLE -->
+  <div class="catalog-container">
+    <!-- SIDEBAR FILTER (KIRI) -->
+    <aside class="sidebar-filter">
+      <h3>Filter Katalog</h3>
+      
+      <div class="filter-group">
+        <h4>Kategori / Genre</h4>
+        <div id="categoryFilterList">
+          <!-- Populated by JS dynamically based on active categories -->
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Format Tersedia</h4>
+        <label><input type="checkbox" id="filterCetak" onchange="filterCatalog()"> Buku Cetak (Fisik)</label>
+        <label><input type="checkbox" id="filterEbook" onchange="filterCatalog()"> E-Book (Digital)</label>
+      </div>
+
+      <button onclick="resetFilters()" class="btn-secondary-sm">Reset Filter</button>
+    </aside>
+
+    <!-- ETALASE GRID (KANAN) -->
+    <main class="catalog-content">
+      <div class="catalog-header">
+        <h2>Daftar Lengkap Buku</h2>
+        <span id="productCount">Menampilkan 0 produk</span>
+      </div>
+      <div id="katalogGrid" class="product-grid">
+        <!-- Injected by main.js -->
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL IG POP-UP & CART MODAL -->
+  <div id="igModal" class="modal-overlay hidden">
+    <div class="modal-ig-container">
+      <button class="close-modal" onclick="closeIgModal()">&times;</button>
+      <div class="ig-left-carousel" id="igCarousel"></div>
+      <div class="ig-right-content">
+        <div id="igCopywriting" class="ig-copywriting"></div>
+        <div class="ig-actions-dummy">
+          <span>❤️ Suka</span> <span>💬 Komentar</span> <span>✈️ Bagikan</span> <span>📌 Simpan</span>
+        </div>
+        <div id="igModalFooter" class="ig-footer"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="cartModal" class="modal-overlay hidden">
+    <div class="modal-cart-container">
+      <div class="cart-header">
+        <h2>Keranjang Belanja (Buku Cetak)</h2>
+        <button class="close-modal" onclick="toggleCartModal()">&times;</button>
+      </div>
+      <div id="cartItemsList" class="cart-items-list"></div>
+      <div class="cart-summary">
+        <span>Total Pembelian:</span>
+        <strong id="cartTotal">Rp 0</strong>
+      </div>
+      <div class="cart-actions">
+        <button onclick="clearCart()" class="btn-danger">Kosongkan Keranjang</button>
+        <button onclick="checkoutViaWA()" class="btn-wa">Rekap & Beli via WA</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
