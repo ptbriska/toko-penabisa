@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Buku - Toko Penerbit Pena Bisa</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body data-page="detailbuku">
+
+  <!-- HEADER GLOBAL -->
+  <header class="navbar">
+    <div class="navbar-brand">
+      <a href="index.html" class="logo">Toko Pena Bisa</a>
+    </div>
+    <nav class="nav-menu">
+      <a href="index.html">Beranda</a>
+      <a href="katalog.html">Katalog</a>
+      <a href="bundling.html">Paket Bundling</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="cart.html" class="btn-cart-nav">
+        🛒 Keranjang <span id="cartBadge" class="badge">0</span>
+      </a>
+      <a href="https://penabisa.com" target="_blank" rel="noopener" class="btn-shortcut">Web Penerbit ↗</a>
+    </div>
+  </header>
+
+  <main class="detail-container">
+    <div id="detailLoading" class="loading-state">Memuat data buku...</div>
+
+    <div id="bookView" class="detail-wrapper hidden">
+      <!-- KIRI: GALERI BUKU (Gambar Depan, Belakang, Isi) -->
+      <div class="detail-media">
+        <div id="bookMainImage" class="main-image-box"></div>
+        <div id="bookThumbnails" class="thumbnail-list"></div>
+      </div>
+
+      <!-- KANAN: HYBRID METADATA & JALUR PEMBELIAN -->
+      <div class="detail-info">
+        <span class="badge-type">Buku Cetak / E-Book</span>
+        <h1 id="bookTitle">Judul Buku</h1>
+        <p class="detail-penulis">Penulis: <span id="bookAuthor">-</span></p>
+
+        <!-- METADATA ISBN -->
+        <div class="metadata-card">
+          <div class="meta-item">
+            <span>ISBN Cetak:</span>
+            <strong id="isbnCetakText">-</strong>
+          </div>
+          <div class="meta-item">
+            <span>ISBN E-Book:</span>
+            <strong id="isbnEbookText">-</strong>
+          </div>
+          <div class="meta-item">
+            <span>Kategori:</span>
+            <strong id="bookCategory">-</strong>
+          </div>
+        </div>
+
+        <!-- ENGINE PEMBELIAN HYBRID -->
+        <div class="action-card">
+          <!-- Opsi E-Book (Mayar Only) -->
+          <div id="ebookOptionCard" class="option-box hidden">
+            <div class="option-header">
+              <h4>📱 Format E-Book (Digital)</h4>
+              <span id="priceEbookTag" class="price-tag">Rp 0</span>
+            </div>
+            <p class="option-desc">Akses cepat, baca langsung dari gadget via platform Mayar.</p>
+            <a id="btnMayar" href="#" target="_blank" class="btn-mayar">Beli E-Book Langsung (Mayar)</a>
+          </div>
+
+          <!-- Opsi Cetak (Marketplace, WA Direct, & Cart) -->
+          <div id="cetakOptionCard" class="option-box hidden">
+            <div class="option-header">
+              <h4>📚 Format Buku Cetak (Fisik)</h4>
+              <span id="priceCetakTag" class="price-tag">Rp 0</span>
+            </div>
+            <div class="btn-group-cetak">
+              <a id="btnShopee" href="#" target="_blank" class="btn-shopee hidden">Shopee</a>
+              <a id="btnTokopedia" href="#" target="_blank" class="btn-tokopedia hidden">Tokopedia</a>
+              <a id="btnWaDirect" href="#" target="_blank" class="btn-wa">Beli Direct WA</a>
+            </div>
+            <button id="btnAddToCartBook" class="btn-cart-add">+ Masukkan Keranjang</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESKRIPSI MARKDOWN & REVIEWS -->
+    <section id="bookExtra" class="detail-extra hidden">
+      <div class="tab-content">
+        <h2>Deskripsi Buku</h2>
+        <div id="bookMarkdown" class="markdown-body"></div>
+      </div>
+
+      <div class="reviews-section">
+        <h2>Ulasan Pembaca</h2>
+        <div class="add-review-form">
+          <select id="reviewRating">
+            <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+            <option value="4">⭐⭐⭐⭐ (4/5)</option>
+            <option value="3">⭐⭐⭐ (3/5)</option>
+          </select>
+          <input type="text" id="reviewName" placeholder="Nama Anda">
+          <textarea id="reviewComment" rows="3" placeholder="Tulis pendapat Anda tentang buku ini..."></textarea>
+          <button onclick="submitReview()" class="btn-secondary">Kirim Ulasan</button>
+        </div>
+        <div id="reviewsList" class="reviews-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
