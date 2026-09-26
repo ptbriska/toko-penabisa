@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beranda - Toko Penerbit Pena Bisa</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="beranda">
+
+  <!-- HEADER GLOBAL -->
+  <header class="navbar">
+    <div class="navbar-brand">
+      <a href="index.html" class="logo">Toko Pena Bisa</a>
+    </div>
+    <nav class="nav-menu">
+      <a href="index.html" class="active">Beranda</a>
+      <a href="katalog.html">Katalog</a>
+      <a href="bundling.html">Paket Bundling</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="search-box">
+        <input type="text" id="globalSearch" placeholder="Cari judul/penulis..." onkeyup="handleSearch(event)">
+      </div>
+      <button class="btn-cart-nav" onclick="toggleCartModal()">
+        🛒 Keranjang <span id="cartBadge" class="badge">0</span>
+      </button>
+      <a href="https://penabisa.com" target="_blank" rel="noopener" class="btn-shortcut">Web Penerbit ↗</a>
+    </div>
+  </header>
+
+  <!-- HERO BANNER PROMOSI -->
+  <section class="hero-banner">
+    <div class="banner-content">
+      <h1>Selamat Datang di Toko Resmi Pena Bisa</h1>
+      <p>Dapatkan buku-buku literasi berkualitas, karya terbaik penulis nusantara dalam format Cetak dan E-Book.</p>
+      <a href="katalog.html" class="btn-primary">Jelajahi Katalog</a>
+    </div>
+  </section>
+
+  <!-- INFORMASI LAYANAN -->
+  <section class="info-section">
+    <div class="info-card">
+      <h3>📖 Tentang Produk</h3>
+      <p>Setiap terbitan membawa identitas resmi ISBN Cetak dan/atau Digital (E-Book) resmi terdaftar.</p>
+    </div>
+    <div class="info-card">
+      <h3>🛒 Cara Pembelian</h3>
+      <p>Pilih buku cetak untuk rekap via WA / Marketplace, atau akses langsung E-Book via platform Mayar.</p>
+    </div>
+    <div class="info-card">
+      <h3>🚚 Informasi Kurir</h3>
+      <p>Pengiriman buku fisik mendukung berbagai jasa ekspedisi terpercaya dengan kalkulasi manual via admin WA.</p>
+    </div>
+  </section>
+
+  <!-- BUKU BEST SELLER -->
+  <section class="best-seller-section">
+    <h2>🔥 Buku Best Seller</h2>
+    <div id="bestSellerGrid" class="product-grid">
+      <!-- Injected by main.js (filtered by is_best_seller: true) -->
+    </div>
+  </section>
+
+  <!-- MODAL IG POP-UP -->
+  <div id="igModal" class="modal-overlay hidden">
+    <div class="modal-ig-container">
+      <button class="close-modal" onclick="closeIgModal()">&times;</button>
+      <div class="ig-left-carousel" id="igCarousel"></div>
+      <div class="ig-right-content">
+        <div id="igCopywriting" class="ig-copywriting"></div>
+        <div class="ig-actions-dummy">
+          <span>❤️ Suka</span> <span>💬 Komentar</span> <span>✈️ Bagikan</span> <span>📌 Simpan</span>
+        </div>
+        <div id="igModalFooter" class="ig-footer"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL KERANJANG BELANJA -->
+  <div id="cartModal" class="modal-overlay hidden">
+    <div class="modal-cart-container">
+      <div class="cart-header">
+        <h2>Keranjang Belanja (Buku Cetak)</h2>
+        <button class="close-modal" onclick="toggleCartModal()">&times;</button>
+      </div>
+      <div id="cartItemsList" class="cart-items-list"></div>
+      <div class="cart-summary">
+        <span>Total Pembelian:</span>
+        <strong id="cartTotal">Rp 0</strong>
+      </div>
+      <div class="cart-actions">
+        <button onclick="clearCart()" class="btn-danger">Kosongkan Keranjang</button>
+        <button onclick="checkoutViaWA()" class="btn-wa">Rekap & Beli via WA</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
