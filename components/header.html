@@ -1,0 +1,36 @@
+<header class="navbar">
+  <div class="nav-container">
+    <!-- BRANDING LOGO -->
+    <a href="index.html" class="logo">
+      Toko <span>Pena Bisa</span>
+    </a>
+    
+    <!-- MENU NAVIGASI UTAMA -->
+    <nav class="nav-links">
+      <a href="index.html" id="nav-beranda">Beranda</a>
+      <a href="katalog.html" id="nav-katalog">Katalog</a>
+      <a href="bundling.html" id="nav-bundling">Paket Bundling</a>
+    </nav>
+
+    <!-- KOLOM PENCARIAN MEMANJANG (IN-HEADER SEARCH BAR) -->
+    <div class="header-search-bar">
+      <span class="search-icon">🔍</span>
+      <input 
+        type="text" 
+        id="globalSearchInput" 
+        placeholder="Cari Produk, Judul Buku, atau Penulis..." 
+        onkeypress="handleGlobalSearch(event)"
+      >
+    </div>
+
+    <!-- ACTION BUTTONS (KERANJANG & LINK PUBLISHER) -->
+    <div class="nav-right">
+      <a href="cart.html" id="nav-cart" class="btn-cart-light">
+        🛒 Keranjang <span id="cartBadge" class="badge-count">0</span>
+      </a>
+      <a href="https://penabisa.com" target="_blank" rel="noopener" class="btn-publisher">
+        Web Utama ↗
+      </a>
+    </div>
+  </div>
+</header>
