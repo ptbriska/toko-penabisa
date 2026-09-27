@@ -1,43 +1,38 @@
 {
   "banner_promo": {
-    "image_url": "assets/banner-promo.png",
-    "alt_text": "Promo Spesial Terbitan Baru Pena Bisa",
-    "link": "katalog.html"
+    "image_url": "banner-promo.png",
+    "link": "../katalog/index.html",
+    "alt": "Promo Terbitan Baru Pena Bisa"
   },
   "hero": {
-    "badge": "📚 Penerbit Buku Literasi & Pendidikan",
-    "headline": "Temukan Karya Terbaik Penulis Nusantara",
-    "subheadline": "Dapatkan akses mudah ke koleksi buku cetak fisik berkualitas dan e-book digital resmi ber-ISBN.",
-    "cta_primary_text": "Jelajahi Katalog",
-    "cta_primary_link": "katalog.html",
-    "cta_secondary_text": "Paket Bundling",
-    "cta_secondary_link": "bundling.html"
+    "badge": "Penerbit Literasi Modern",
+    "headline": "Selamat Datang di Toko Resmi Penerbit Pena Bisa",
+    "subheadline": "Temukan koleksi buku akademik, literasi, dan referensi populer dalam bentuk Buku Cetak Fisik dan E-Book Digital ber-ISBN resmi.",
+    "cta_primary_text": "Jelajahi Katalog Buku",
+    "cta_primary_link": "../katalog/index.html",
+    "cta_secondary_text": "Paket Bundling Hemat",
+    "cta_secondary_link": "../bundling/index.html"
   },
   "info_services": [
     {
-      "badge": "Legal & Resmi",
+      "badge": "Jaminan Resmi",
       "icon": "📖",
-      "title": "Identitas ISBN Resmi",
-      "description": "Setiap terbitan memiliki ISBN Cetak dan/atau Digital (E-Book) resmi yang terdaftar di Perpusnas."
+      "title": "Terbitan ber-ISBN",
+      "description": "Setiap judul terbitan memiliki identitas resmi ISBN Cetak dan/atau ISBN E-Book terdaftar."
     },
     {
-      "badge": "Mudah & Cepat",
-      "icon": "🛒",
-      "title": "Transaksi Praktis",
-      "description": "Beli e-book instant via Mayar, atau rekap pesan buku cetak otomatis via WhatsApp & Marketplace."
+      "badge": "Kemudahan Akses",
+      "icon": "⚡",
+      "title": "Beli E-Book via Mayar",
+      "description": "Akses langsung format digital secara otomatis via integrasi instan platform Mayar."
     },
     {
-      "badge": "Aman & Terpercaya",
-      "icon": "🚚",
-      "title": "Pengiriman Nusantara",
-      "description": "Mendukung berbagai ekspedisi terpercaya (JNE, J&T, Pos) dengan kalkulasi ongkir transparan."
+      "badge": "Rekap Otomatis",
+      "icon": "💬",
+      "title": "Checkout Cetak via WA",
+      "description": "Kumpulkan daftar buku fisik pilihan di keranjang, pesan sekaligus via WhatsApp Admin."
     }
   ],
-  "categories_config": {
-    "badge": "Eksplorasi Literasi",
-    "title": "🏷️ Kategori Buku Terbitan",
-    "subtitle": "Pilih bidang keilmuan dan minat baca yang Anda cari"
-  },
   "categories": [
     { "code": "A", "name": "Buku Perlombaan", "icon": "🏆" },
     { "code": "B", "name": "Buku Pra Sekolah", "icon": "🧸" },
