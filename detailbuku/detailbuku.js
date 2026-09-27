@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Detail Buku Module Logic - Isolated
+   Detail Buku Module Logic - Hybrid Lookup (Folder & SKU Support)
    ========================================================================== */
 
 const WA_NUMBER = "6282268118842";
@@ -49,131 +49,180 @@ function handleGlobalSearch(event) {
   }
 }
 
-// 4. Inisialisasi Data Detail Buku
+// 4. Inisialisasi Data Detail Buku (Dukungan Hybrid Folder & SKU)
 async function initBookDetailPage() {
   const params = new URLSearchParams(window.location.search);
-  currentFolder = params.get('folder');
+  let paramValue = params.get('folder') || params.get('sku');
 
-  if (!currentFolder) {
-    document.getElementById('detailLoading').innerHTML = '<p>Error: Folder buku tidak ditentukan.</p>';
+  if (!paramValue) {
+    document.getElementById('detailLoading').innerHTML = '<p style="color:#ef4444; padding:2rem; text-align:center;">⚠️ Error: Parameter buku tidak ditemukan di URL.</p>';
     return;
   }
+
+  // A. FITUR RECOVERY: Resolve Folder Name jika paramValue berupa SKU
+  currentFolder = await resolveFolderName(paramValue);
 
   const bookPath = `../books/${currentFolder}`;
 
   try {
+    // B. Fetch Data Metadata & Markdown
     const [meta, landing, mdText] = await Promise.all([
-      fetch(`${bookPath}/metabuku.json`).then(r => r.json()),
+      fetch(`${bookPath}/metabuku.json`).then(r => {
+        if (!r.ok) throw new Error("metabuku.json tidak ditemukan");
+        return r.json();
+      }),
       fetch(`${bookPath}/landingpage.json`).then(r => r.json()).catch(() => ({})),
-      fetch(`${bookPath}/deskripsibuku.md`).then(r => r.text()).catch(() => "Deskripsi belum tersedia.")
+      fetch(`${bookPath}/deskripsibuku.md`).then(r => r.text()).catch(() => "Deskripsi buku belum tersedia.")
     ]);
 
     currentBookMeta = meta;
 
-    // A. Populate Basic Info & Breadcrumb
+    // C. Populate Basic Info & Breadcrumb
     document.title = `${meta.judul} - Toko Penerbit Pena Bisa`;
-    document.getElementById('breadcrumbTitle').innerText = meta.judul;
-    document.getElementById('bookTitle').innerText = meta.judul;
-    document.getElementById('bookCategoryBadge').innerText = meta.kategori || 'Buku Reguler';
+    if (document.getElementById('breadcrumbTitle')) document.getElementById('breadcrumbTitle').innerText = meta.judul;
+    if (document.getElementById('bookTitle')) document.getElementById('bookTitle').innerText = meta.judul;
+    if (document.getElementById('bookCategoryBadge')) document.getElementById('bookCategoryBadge').innerText = meta.kategori || 'Buku Reguler';
 
-    // B. Metadata Identitas Buku Lengkap
-    document.getElementById('metaPenulisVal').innerText = meta.penulis || 'Tim Penulis Pena Bisa';
-    document.getElementById('metaPenerbitVal').innerText = meta.penerbit || 'Penerbit Pena Bisa';
-    document.getElementById('metaTebalVal').innerText = meta.tebal ? `${meta.tebal} Hlm` : '-';
-    document.getElementById('metaBeratVal').innerText = meta.berat ? `${meta.berat} gram` : '-';
-    document.getElementById('metaCetakanVal').innerText = meta.cetakan || 'HVS, Full Color / BW';
-    document.getElementById('metaUkuranVal').innerText = meta.ukuran || '19 x 26 cm';
-    document.getElementById('metaTerbitVal').innerText = meta.terbit || meta.tahun_terbit || meta.tahun || '-';
-    document.getElementById('metaSkuVal').innerText = meta.sku || meta.id || currentFolder;
-    document.getElementById('isbnCetakVal').innerText = meta.isbn_cetak || '-';
-    document.getElementById('isbnEbookVal').innerText = meta.isbn_ebook || '-';
-    document.getElementById('metaInfoLainVal').innerText = meta.informasi_lainnya || meta.catatan || '-';
+    // D. Metadata Identitas Buku Lengkap
+    if (document.getElementById('metaPenulisVal')) document.getElementById('metaPenulisVal').innerText = meta.penulis || 'Tim Penulis Pena Bisa';
+    if (document.getElementById('metaPenerbitVal')) document.getElementById('metaPenerbitVal').innerText = meta.penerbit || 'Penerbit Pena Bisa';
+    if (document.getElementById('metaTebalVal')) document.getElementById('metaTebalVal').innerText = meta.tebal ? `${meta.tebal} Hlm` : '-';
+    if (document.getElementById('metaBeratVal')) document.getElementById('metaBeratVal').innerText = meta.berat ? `${meta.berat} gram` : '-';
+    if (document.getElementById('metaCetakanVal')) document.getElementById('metaCetakanVal').innerText = meta.cetakan || 'HVS, Full Color / BW';
+    if (document.getElementById('metaUkuranVal')) document.getElementById('metaUkuranVal').innerText = meta.ukuran || '19 x 26 cm';
+    if (document.getElementById('metaTerbitVal')) document.getElementById('metaTerbitVal').innerText = meta.terbit || meta.tahun_terbit || meta.tahun || '-';
+    if (document.getElementById('metaSkuVal')) document.getElementById('metaSkuVal').innerText = meta.sku || meta.id || currentFolder;
+    if (document.getElementById('isbnCetakVal')) document.getElementById('isbnCetakVal').innerText = meta.isbn_cetak || '-';
+    if (document.getElementById('isbnEbookVal')) document.getElementById('isbnEbookVal').innerText = meta.isbn_ebook || '-';
+    if (document.getElementById('metaInfoLainVal')) document.getElementById('metaInfoLainVal').innerText = meta.informasi_lainnya || meta.catatan || '-';
 
-    // C. Setup Image Gallery
+    // E. Setup Image Gallery
     const images = landing.carousel_images && landing.carousel_images.length > 0 
       ? landing.carousel_images 
       : ['gambardepan.png'];
 
     setupGallery(bookPath, images);
 
-    // D. Setup E-Book Option (Mayar Direct)
+    // F. Setup E-Book Option (Mayar Direct)
     if (meta.links && meta.links.mayar_ebook) {
       const ebookBox = document.getElementById('optionEbookBox');
-      ebookBox.classList.remove('hidden');
-      document.getElementById('priceEbookTag').innerText = meta.harga_ebook ? `Rp ${meta.harga_ebook.toLocaleString('id-ID')}` : 'Akses Mayar';
-      document.getElementById('btnMayarEbook').href = meta.links.mayar_ebook;
+      if (ebookBox) ebookBox.classList.remove('hidden');
+      if (document.getElementById('priceEbookTag')) document.getElementById('priceEbookTag').innerText = meta.harga_ebook ? `Rp ${meta.harga_ebook.toLocaleString('id-ID')}` : 'Akses Mayar';
+      if (document.getElementById('btnMayarEbook')) document.getElementById('btnMayarEbook').href = meta.links.mayar_ebook;
     }
 
-    // E. Setup Cetak Option (Marketplace, WA, & Cart)
+    // G. Setup Cetak Option (Marketplace, WA, & Cart)
     if (meta.harga_cetak) {
       const cetakBox = document.getElementById('optionCetakBox');
-      cetakBox.classList.remove('hidden');
-      document.getElementById('priceCetakTag').innerText = `Rp ${meta.harga_cetak.toLocaleString('id-ID')}`;
+      if (cetakBox) cetakBox.classList.remove('hidden');
+      if (document.getElementById('priceCetakTag')) document.getElementById('priceCetakTag').innerText = `Rp ${meta.harga_cetak.toLocaleString('id-ID')}`;
 
       if (meta.links && meta.links.shopee) {
         const btnShopee = document.getElementById('btnShopee');
-        btnShopee.href = meta.links.shopee;
-        btnShopee.classList.remove('hidden');
+        if (btnShopee) {
+          btnShopee.href = meta.links.shopee;
+          btnShopee.classList.remove('hidden');
+        }
       }
 
       if (meta.links && meta.links.tokopedia) {
         const btnTokped = document.getElementById('btnTokopedia');
-        btnTokped.href = meta.links.tokopedia;
-        btnTokped.classList.remove('hidden');
+        if (btnTokped) {
+          btnTokped.href = meta.links.tokopedia;
+          btnTokped.classList.remove('hidden');
+        }
       }
 
       const waMsg = encodeURIComponent(`Halo Admin Pena Bisa, saya mau pesan Buku Cetak:\n*Judul:* ${meta.judul}\n*SKU:* ${meta.sku || currentFolder}\n*Harga:* Rp ${meta.harga_cetak.toLocaleString('id-ID')}`);
-      document.getElementById('btnWaDirect').href = `https://wa.me/${WA_NUMBER}?text=${waMsg}`;
+      if (document.getElementById('btnWaDirect')) document.getElementById('btnWaDirect').href = `https://wa.me/${WA_NUMBER}?text=${waMsg}`;
 
-      document.getElementById('btnAddToCart').onclick = () => {
-        addToCart(meta.id || meta.sku || currentFolder, meta.judul, meta.harga_cetak, `${bookPath}/${images[0]}`);
-      };
+      if (document.getElementById('btnAddToCart')) {
+        document.getElementById('btnAddToCart').onclick = () => {
+          addToCart(meta.id || meta.sku || currentFolder, meta.judul, meta.harga_cetak, `${bookPath}/${images[0]}`);
+        };
+      }
     }
 
-    // F. Parse & Render Markdown
-    if (typeof marked !== 'undefined') {
+    // H. Parse & Render Markdown
+    if (typeof marked !== 'undefined' && document.getElementById('bookMarkdownContent')) {
       document.getElementById('bookMarkdownContent').innerHTML = marked.parse(mdText);
-    } else {
+    } else if (document.getElementById('bookMarkdownContent')) {
       document.getElementById('bookMarkdownContent').innerText = mdText;
     }
 
-    // G. Switch Visibility
+    // I. Switch Visibility
     document.getElementById('detailLoading').classList.add('hidden');
-    document.getElementById('bookWrapper').classList.remove('hidden');
-    document.getElementById('bookExtraSection').classList.remove('hidden');
+    if (document.getElementById('bookWrapper')) document.getElementById('bookWrapper').classList.remove('hidden');
+    if (document.getElementById('bookExtraSection')) document.getElementById('bookExtraSection').classList.remove('hidden');
 
-    // H. Render User Reviews
+    // J. Render User Reviews
     renderRealReviews();
 
   } catch (err) {
     console.error("Gagal memuat detail buku:", err);
-    document.getElementById('detailLoading').innerHTML = '<p style="color:#ef4444;">Gagal memuat data metadata buku.</p>';
+    document.getElementById('detailLoading').innerHTML = `<p style="color:#ef4444; padding:2rem; text-align:center;">⚠️ Gagal memuat metadata buku untuk "${currentFolder}". Pastikan folder tersebut ada di repositori.</p>`;
   }
 }
 
-// 5. Setup Image Gallery
+// 5. Helper Function: Resolve Parameter (Ganti SKU ke Nama Folder Asli Jika Perlu)
+async function resolveFolderName(inputParam) {
+  try {
+    const res = await fetch('../index-katalog.json');
+    if (!res.ok) return inputParam;
+    
+    const indexData = await res.json();
+    const books = indexData.books || [];
+
+    // Jika inputParam sudah merupakan nama folder yang terdaftar
+    if (books.includes(inputParam)) {
+      return inputParam;
+    }
+
+    // Cari folder yang memiliki metabuku.json dengan SKU / ID yang cocok
+    for (const folder of books) {
+      try {
+        const bRes = await fetch(`../books/${folder}/metabuku.json`);
+        if (bRes.ok) {
+          const bMeta = await bRes.json();
+          if (bMeta.sku === inputParam || bMeta.id === inputParam) {
+            return folder; // Kembalikan nama folder fisiknya
+          }
+        }
+      } catch (e) {}
+    }
+  } catch (e) {}
+
+  return inputParam; // Fallback ke inputParam asal
+}
+
+// 6. Setup Image Gallery
 function setupGallery(basePath, images) {
   const mainBox = document.getElementById('mainImageBox');
   const thumbList = document.getElementById('thumbnailList');
 
-  mainBox.innerHTML = `<img id="mainImageDisplay" src="${basePath}/${images[0]}" alt="Sampul Utama" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x500?text=Sampul+Buku';">`;
+  if (mainBox) {
+    mainBox.innerHTML = `<img id="mainImageDisplay" src="${basePath}/${images[0]}" alt="Sampul Utama" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x500?text=Sampul+Buku';">`;
+  }
 
-  if (images.length > 1) {
-    thumbList.innerHTML = images.map((img, idx) => `
-      <img src="${basePath}/${img}" class="${idx === 0 ? 'active' : ''}" onclick="switchGalleryImg('${basePath}/${img}', this)" alt="Pratinjau ${idx + 1}" onerror="this.onerror=null; this.src='https://via.placeholder.com/80x100?text=Pratinjau';">
-    `).join('');
-  } else {
-    thumbList.innerHTML = '';
+  if (thumbList) {
+    if (images.length > 1) {
+      thumbList.innerHTML = images.map((img, idx) => `
+        <img src="${basePath}/${img}" class="${idx === 0 ? 'active' : ''}" onclick="switchGalleryImg('${basePath}/${img}', this)" alt="Pratinjau ${idx + 1}" onerror="this.onerror=null; this.src='https://via.placeholder.com/80x100?text=Pratinjau';">
+      `).join('');
+    } else {
+      thumbList.innerHTML = '';
+    }
   }
 }
 
 function switchGalleryImg(fullPath, element) {
-  document.getElementById('mainImageDisplay').src = fullPath;
+  const mainDisplay = document.getElementById('mainImageDisplay');
+  if (mainDisplay) mainDisplay.src = fullPath;
   document.querySelectorAll('#thumbnailList img').forEach(el => el.classList.remove('active'));
   element.classList.add('active');
 }
 
-// 6. Sistem Keranjang (LocalStorage)
+// 7. Sistem Keranjang (LocalStorage)
 function addToCart(id, judul, harga, cover) {
   let cart = JSON.parse(localStorage.getItem('penabisa_cart')) || [];
   const existing = cart.find(item => item.id === id);
@@ -189,7 +238,7 @@ function addToCart(id, judul, harga, cover) {
   alert(`✅ "${judul}" berhasil ditambahkan ke keranjang belanja.`);
 }
 
-// 7. Review & Rating Handler (Transparan & Asli)
+// 8. Review & Rating Handler
 function renderRealReviews() {
   const container = document.getElementById('reviewsList');
   if (!container || !currentFolder) return;
@@ -219,16 +268,20 @@ function renderRealReviews() {
 }
 
 function submitReview() {
-  const name = document.getElementById('reviewName').value.trim();
-  const comment = document.getElementById('reviewComment').value.trim();
-  const ratingVal = document.getElementById('reviewRating').value;
+  const nameInput = document.getElementById('reviewName');
+  const commentInput = document.getElementById('reviewComment');
+  const ratingInput = document.getElementById('reviewRating');
+
+  if (!nameInput || !commentInput || !currentFolder) return;
+
+  const name = nameInput.value.trim();
+  const comment = commentInput.value.trim();
+  const ratingVal = ratingInput ? ratingInput.value : "5";
 
   if (!name || !comment) {
     alert("Mohon isi nama dan pesan ulasan Anda.");
     return;
   }
-
-  if (!currentFolder) return;
 
   const stars = "⭐".repeat(parseInt(ratingVal));
   const newReview = { name, comment, rating: stars };
@@ -239,8 +292,8 @@ function submitReview() {
 
   localStorage.setItem(storageKey, JSON.stringify(existingReviews));
 
-  document.getElementById('reviewName').value = '';
-  document.getElementById('reviewComment').value = '';
+  nameInput.value = '';
+  commentInput.value = '';
 
   renderRealReviews();
   alert("Terima kasih! Ulasan Anda telah berhasil dikirim.");
