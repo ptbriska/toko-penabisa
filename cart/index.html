@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keranjang Belanja - Toko Penerbit Pena Bisa</title>
+
+  <!-- Font Google Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styling Terisolasi Cart -->
+  <link rel="stylesheet" href="cart.css">
+</head>
+<body data-page="cart">
+
+  <!-- Shared Header Injection Container -->
+  <div id="globalHeader"></div>
+
+  <!-- MAIN CART CONTAINER -->
+  <main class="cart-container">
+    <div class="cart-header-title">
+      <h2>🛒 Keranjang Belanja Buku Cetak</h2>
+      <p class="sub-text">Rekap daftar pesanan buku fisik Anda sebelum melanjutkan ke pemesanan via WhatsApp</p>
+    </div>
+
+    <!-- TAMPILAN JIKA KERANJANG KOSONG -->
+    <div id="emptyCartState" class="empty-cart-box hidden">
+      <div class="empty-icon">📚</div>
+      <h3>Keranjang Belanja Anda Masih Kosong</h3>
+      <p>Belum ada buku cetak yang ditambahkan. Silakan jelajahi etalase katalog kami.</p>
+      <a href="../katalog/index.html" class="btn-browse-catalog">Jelajahi Katalog Buku ➔</a>
+    </div>
+
+    <!-- WRAPPER UTAMA KETIKA ADA ITEM -->
+    <div id="cartContentWrapper" class="cart-grid">
+      <!-- SISI KIRI: TABEL DAFTAR BUKU -->
+      <section class="cart-items-section">
+        <div class="table-responsive">
+          <table class="cart-table">
+            <thead>
+              <tr>
+                <th>Produk Buku</th>
+                <th>Harga Satuan</th>
+                <th>Jumlah (Qty)</th>
+                <th>Subtotal</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="cartTableBody">
+              <!-- Item diinjeksi via cart.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cart-actions-bar">
+          <button type="button" onclick="clearCartConfirm()" class="btn-reset-cart">
+            🗑️ Kosongkan Keranjang
+          </button>
+          <a href="../katalog/index.html" class="btn-continue-shopping">
+            + Tambah Buku Lainnya
+          </a>
+        </div>
+      </section>
+
+      <!-- SISI KANAN: FORM DATA PEMBELI & REKAP CHEKOUT -->
+      <aside class="checkout-summary-card">
+        <h3>📋 Form Data Pengiriman</h3>
+        
+        <div class="checkout-form">
+          <div class="form-group">
+            <label for="buyerName">Nama Lengkap Pembeli *</label>
+            <input type="text" id="buyerName" placeholder="Cth: Budi Santoso" required>
+          </div>
+
+          <div class="form-group">
+            <label for="buyerPhone">Nomor WhatsApp / HP *</label>
+            <input type="tel" id="buyerPhone" placeholder="Cth: 081234567890" required>
+          </div>
+
+          <div class="form-group">
+            <label for="buyerAddress">Alamat Lengkap Pengiriman *</label>
+            <textarea id="buyerAddress" rows="3" placeholder="Nama Jalan, No. Rumah, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten, Kode Pos" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="courierOption">Pilihan Jasa Ekspedisi / Kurir</label>
+            <select id="courierOption">
+              <option value="J&T Express">J&T Express</option>
+              <option value="JNE Express">JNE Express</option>
+              <option value="Pos Indonesia">Pos Indonesia</option>
+              <option value="Wahana Express">Wahana Express</option>
+              <option value="Rekomendasi CS Terbaik">Rekomendasi Ongkir Termurah dari CS</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="buyerNotes">Catatan Tambahan (Opsional)</label>
+            <input type="text" id="buyerNotes" placeholder="Cth: Titip di satpam jika rumah kosong">
+          </div>
+        </div>
+
+        <hr class="summary-divider">
+
+        <div class="summary-totals">
+          <div class="summary-row">
+            <span>Total Item Buku:</span>
+            <strong id="summaryTotalItems">0 item</strong>
+          </div>
+          <div class="summary-row total">
+            <span>Total Harga Buku:</span>
+            <strong id="summaryTotalPrice">Rp 0</strong>
+          </div>
+          <small class="note-shipping">* Belum termasuk ongkos kirim (akan dihitung oleh CS via WA)</small>
+        </div>
+
+        <button type="button" onclick="checkoutViaWA()" class="btn-checkout-wa">
+          📱 Beli & Rekap via WhatsApp (CS) ➔
+        </button>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Shared Footer Injection Container -->
+  <div id="globalFooter"></div>
+
+  <!-- Script Logic Terisolasi Cart -->
+  <script src="cart.js"></script>
+</body>
+</html>
