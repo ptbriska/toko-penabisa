@@ -87,26 +87,79 @@ function renderCategorySidebar() {
 
 // 5. Load Master Data Katalog dari ../index-katalog.json
 async function loadKatalogData() {
+  const container = document.getElementById('katalogGrid');
+  
+  // Opsi lokasi pencarian index-katalog.json
+  const possiblePaths = [
+    '../index-katalog.json',
+    '/index-katalog.json',
+    '../../index-katalog.json',
+    '../data/index-katalog.json'
+  ];
+
+  let res = null;
+  let usedPath = '';
+
+  for (const path of possiblePaths) {
+    try {
+      const response = await fetch(path);
+      // Memastikan HTTP status 200 OK dan tipe konten adalah JSON/non-HTML
+      const contentType = response.headers.get('content-type');
+      if (response.ok && contentType && contentType.includes('application/json')) {
+        res = response;
+        usedPath = path;
+        break;
+      }
+    } catch (e) {
+      // Coba path berikutnya
+    }
+  }
+
+  if (!res) {
+    console.error("❌ File index-katalog.json tidak ditemukan di semua opsi path.");
+    if (container) {
+      container.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 2.5rem; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 12px; color: #9f1239;">
+          <h3 style="margin-bottom: 0.5rem;">⚠️ File index-katalog.json Tidak Ditemukan (404)</h3>
+          <p style="font-size: 0.9rem;">Pastikan file <code>index-katalog.json</code> berada di folder root utama repositori dan server dijalankan dari folder root tersebut.</p>
+        </div>
+      `;
+    }
+    return;
+  }
+
   try {
-    // Perbaikan path ke folder /data/
-    const res = await fetch('../index-katalog.json');
     const index = await res.json();
+    console.log(`✅ Berhasil memuat index dari path: ${usedPath}`, index);
 
     catalogBooks = [];
     for (const folder of index.books) {
       try {
-        const meta = await fetch(`../books/${folder}/metabuku.json`).then(r => r.json());
-        const landing = await fetch(`../books/${folder}/landingpage.json`).then(r => r.json());
-        catalogBooks.push({ folder: `../books/${folder}`, folderName: folder, meta, landing });
+        const metaRes = await fetch(`../books/${folder}/metabuku.json`);
+        if (!metaRes.ok) continue;
+        const meta = await metaRes.json();
+
+        let landing = { carousel_images: ['gambardepan.png'], copywriting_ig: '' };
+        try {
+          const landingRes = await fetch(`../books/${folder}/landingpage.json`);
+          if (landingRes.ok) landing = await landingRes.json();
+        } catch (e) {}
+
+        catalogBooks.push({
+          folder: `../books/${folder}`,
+          folderName: folder,
+          meta,
+          landing
+        });
       } catch (e) {
-        console.warn(`Folder buku "${folder}" gagal dimuat.`, e);
+        console.warn(`Gagal memuat folder buku: ${folder}`, e);
       }
     }
 
     renderKatalogView(catalogBooks);
 
   } catch (err) {
-    console.error("Gagal memuat index-katalog.json:", err);
+    console.error("❌ Gagal parsing isi file JSON:", err);
   }
 }
 
