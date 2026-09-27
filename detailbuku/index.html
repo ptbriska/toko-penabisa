@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Buku - Toko Penerbit Pena Bisa</title>
+  
+  <!-- Font Google Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Parser Markdown CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Styling Terisolasi Detail Buku -->
+  <link rel="stylesheet" href="detailbuku.css">
+</head>
+<body data-page="detailbuku">
+
+  <!-- Shared Header Injection Container -->
+  <div id="globalHeader"></div>
+
+  <!-- MAIN DETAIL CONTAINER -->
+  <main class="detail-container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <a href="../beranda/index.html">Beranda</a> &rsaquo;
+      <a href="../katalog/index.html">Katalog Buku</a> &rsaquo;
+      <span id="breadcrumbTitle">Detail Buku</span>
+    </nav>
+
+    <!-- State Loading -->
+    <div id="detailLoading" class="loading-box">
+      <div class="spinner"></div>
+      <p>Memuat rincian metadata buku...</p>
+    </div>
+
+    <!-- Wrapper Detail Utama -->
+    <div id="bookWrapper" class="detail-wrapper hidden">
+      <!-- SISI KIRI: GALERI PRATINJAU GAMBAR -->
+      <div class="detail-media">
+        <div id="mainImageBox" class="main-image-box">
+          <!-- Main Image dynamically inserted -->
+        </div>
+        <div id="thumbnailList" class="thumbnail-list">
+          <!-- Thumbnails dynamically inserted -->
+        </div>
+      </div>
+
+      <!-- SISI KANAN: METADATA & OPSI PEMBELIAN HYBRID -->
+      <div class="detail-info">
+        <div class="category-badge" id="bookCategoryBadge">Kategori Buku</div>
+        <h1 id="bookTitle">Judul Buku</h1>
+        <p class="author-text">Karya: <strong id="bookAuthor">-</strong></p>
+
+        <!-- HYBRID METADATA (ISBN CETAK & EBOOK) -->
+        <div class="metadata-card">
+          <h4>📌 Identitas Terbitan (Hybrid)</h4>
+          <div class="meta-row">
+            <span>ISBN Cetak:</span>
+            <strong id="isbnCetakVal">-</strong>
+          </div>
+          <div class="meta-row">
+            <span>ISBN E-Book:</span>
+            <strong id="isbnEbookVal">-</strong>
+          </div>
+          <div class="meta-row">
+            <span>Tahun Terbit:</span>
+            <strong id="tahunTerbitVal">-</strong>
+          </div>
+        </div>
+
+        <!-- ENGINE PEMBELIAN DUAL FORMAT -->
+        <div class="action-card-group">
+          <!-- OPSI E-BOOK (MAYAR) -->
+          <div id="optionEbookBox" class="option-card hidden">
+            <div class="option-header">
+              <div>
+                <h5>📱 Format Digital (E-Book)</h5>
+                <small>Baca instan di gadget via platform Mayar</small>
+              </div>
+              <span id="priceEbookTag" class="price-tag">Rp 0</span>
+            </div>
+            <a id="btnMayarEbook" href="#" target="_blank" rel="noopener" class="btn-mayar">
+              ⚡ Beli E-Book Langsung (Mayar)
+            </a>
+          </div>
+
+          <!-- OPSI BUKU CETAK (MARKETPLACE, WA DIRECT, & KERANJANG) -->
+          <div id="optionCetakBox" class="option-card hidden">
+            <div class="option-header">
+              <div>
+                <h5>📚 Format Buku Cetak (Fisik)</h5>
+                <small>Dikirim via ekspedisi terpercaya ke alamat Anda</small>
+              </div>
+              <span id="priceCetakTag" class="price-tag">Rp 0</span>
+            </div>
+
+            <div class="btn-marketplace-group">
+              <a id="btnShopee" href="#" target="_blank" rel="noopener" class="btn-shopee hidden">Shopee</a>
+              <a id="btnTokopedia" href="#" target="_blank" rel="noopener" class="btn-tokopedia hidden">Tokopedia</a>
+              <a id="btnWaDirect" href="#" target="_blank" rel="noopener" class="btn-wa">Direct WA</a>
+            </div>
+
+            <button type="button" id="btnAddToCart" class="btn-cart-add">
+              🛒 + Masukkan Keranjang Belanja
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEKSI TAB: DESKRIPSI MD & ULASAN -->
+    <section id="bookExtraSection" class="detail-extra hidden">
+      <div class="extra-content-box">
+        <h2>📄 Deskripsi & Sinopsis Lengkap</h2>
+        <div id="bookMarkdownContent" class="markdown-body">
+          <!-- Rendered marked.js output -->
+        </div>
+      </div>
+
+      <div class="reviews-box">
+        <h2>⭐ Ulasan Pembaca</h2>
+        
+        <div class="review-form">
+          <h4>Tuliskan Ulasan Anda</h4>
+          <div class="form-row">
+            <select id="reviewRating">
+              <option value="5">⭐⭐⭐⭐⭐ (5 / 5)</option>
+              <option value="4">⭐⭐⭐⭐ (4 / 5)</option>
+              <option value="3">⭐⭐⭐ (3 / 5)</option>
+              <option value="2">⭐⭐ (2 / 5)</option>
+              <option value="1">⭐ (1 / 5)</option>
+            </select>
+            <input type="text" id="reviewName" placeholder="Nama Lengkap / Inisial" required>
+          </div>
+          <textarea id="reviewComment" rows="3" placeholder="Tuliskan ulasan atau kesan bacaan Anda..." required></textarea>
+          <button type="button" onclick="submitReview()" class="btn-submit-review">Kirim Ulasan</button>
+        </div>
+
+        <div id="reviewsList" class="reviews-list">
+          <!-- Rendered user reviews -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Shared Footer Injection Container -->
+  <div id="globalFooter"></div>
+
+  <!-- Script Logic Terisolasi Detail Buku -->
+  <script src="detailbuku.js"></script>
+</body>
+</html>
