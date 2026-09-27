@@ -1,13 +1,15 @@
 /* ==========================================================================
-   Bundling Module Logic - Dynamic WMS SKU Integration & Feed Grid
+   Bundling Module Logic - Isolated (IG Modal Preview + WMS Rekap)
    ========================================================================== */
-
-const WA_NUMBER = "6282268118842";
 
 let masterIndexData = null;
 let bundlingList = [];
-let booksDatabase = {}; // Map SKU ke Metadata Buku
+let booksDatabase = {}; // Map WMS SKU ke Metadata Buku
 let activeTags = new Set();
+
+let currentSlideIndex = 0;
+let currentCarouselImages = [];
+let currentActiveSku = '';
 
 document.addEventListener("DOMContentLoaded", async () => {
   await loadSharedComponents();
@@ -72,7 +74,17 @@ async function loadMasterAndBundlingData() {
     // B. Ambil Daftar Bundling dari index-katalog.json
     bundlingList = masterIndexData.bundling || [];
 
-    // C. Render Sidebar Tags & Grid
+    // C. Pre-load landingpage.json untuk tiap folder bundling (jika ada)
+    for (const bundle of bundlingList) {
+      try {
+        const lRes = await fetch(`../bundling/${bundle.folder}/landingpage.json`);
+        if (lRes.ok) bundle.landing = await lRes.json();
+      } catch (e) {
+        bundle.landing = { carousel_images: ['Poster.png'], copywriting_ig: '' };
+      }
+    }
+
+    // D. Render Sidebar Tags & Grid
     renderTagSidebar();
     renderBundlingGrid(bundlingList);
 
@@ -94,7 +106,6 @@ function renderTagSidebar() {
   const container = document.getElementById('tagFilterList');
   if (!container) return;
 
-  // Kumpulkan seluruh unique tag dari semua bundling
   const allTags = new Set();
   bundlingList.forEach(b => {
     if (Array.isArray(b.tags)) {
@@ -173,18 +184,15 @@ function filterBundling() {
   const maxPrice = parseFloat(document.getElementById('maxPriceBundling')?.value) || Infinity;
 
   const filtered = bundlingList.filter(b => {
-    // Match Format
     let matchFormat = true;
     if (isCetak && !isEbook) matchFormat = (b.jenis === 'Cetak');
     if (isEbook && !isCetak) matchFormat = (b.jenis === 'Ebook');
 
-    // Match Tags
     let matchTag = true;
     if (activeTags.size > 0) {
       matchTag = (b.tags || []).some(t => activeTags.has(t));
     }
 
-    // Match Harga
     const price = b.harga_bundling || 0;
     const matchPrice = price >= minPrice && price <= maxPrice;
 
@@ -207,22 +215,53 @@ function resetBundlingFilters() {
   filterBundling();
 }
 
-// 7. Pop-Up Modal IG Web + Dynamic WMS SKU Reconstruction
-async function openIgModalBundling(sku) {
+// 7. Pop-Up Modal IG Style Murni (Previews Feed + Live Comments + Direct to Detail Only)
+function openIgModalBundling(sku) {
   const bundle = bundlingList.find(b => b.sku === sku);
   if (!bundle) return;
 
+  currentActiveSku = sku;
   const folderPath = `../bundling/${bundle.folder}`;
 
-  // Populate Poster
-  const posterBox = document.getElementById('posterBox');
-  posterBox.innerHTML = `<img src="${folderPath}/Poster.png" alt="${bundle.judul_bundling}" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x500?text=Poster';">`;
+  // Carousel Gambar (diambil dari landingpage.json atau default Poster.png)
+  currentCarouselImages = (bundle.landing && Array.isArray(bundle.landing.carousel_images) && bundle.landing.carousel_images.length > 0)
+    ? bundle.landing.carousel_images
+    : ['Poster.png'];
 
-  // Populate Header
+  currentSlideIndex = 0;
+
+  const slidesContainer = document.getElementById('carouselSlidesContainer');
+  if (slidesContainer) {
+    slidesContainer.innerHTML = currentCarouselImages.map((img, idx) => `
+      <div class="slide-item ${idx === 0 ? 'active' : ''}">
+        <img src="${folderPath}/${img}" alt="Slide ${idx + 1}" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x500?text=Poster';">
+      </div>
+    `).join('');
+  }
+
+  // Navigasi Slider Panah & Dots
+  const prevBtn = document.getElementById('prevSlideBtn');
+  const nextBtn = document.getElementById('nextSlideBtn');
+  const dotsContainer = document.getElementById('carouselDots');
+
+  if (currentCarouselImages.length > 1) {
+    if (prevBtn) prevBtn.style.display = 'flex';
+    if (nextBtn) nextBtn.style.display = 'flex';
+    if (dotsContainer) {
+      dotsContainer.style.display = 'flex';
+      dotsContainer.innerHTML = currentCarouselImages.map((_, idx) => `
+        <span class="dot ${idx === 0 ? 'active' : ''}" onclick="goToSlide(${idx})"></span>
+      `).join('');
+    }
+  } else {
+    if (prevBtn) prevBtn.style.display = 'none';
+    if (nextBtn) nextBtn.style.display = 'none';
+    if (dotsContainer) dotsContainer.style.display = 'none';
+  }
+
+  // Header & Info
   document.getElementById('modalBundlingTitle').innerText = bundle.judul_bundling;
-  document.getElementById('modalBundlingSku').innerText = `SKU Bundling: ${bundle.sku}`;
-
-  // Populate Tags & Price
+  document.getElementById('modalBundlingSku').innerText = `SKU: ${bundle.sku}`;
   document.getElementById('modalBundlingTags').innerHTML = (bundle.tags || []).map(t => `<span class="tag-pill">#${t}</span>`).join(' ');
   document.getElementById('modalBundlingPrice').innerText = bundle.harga_bundling ? `Rp ${bundle.harga_bundling.toLocaleString('id-ID')}` : 'Hubungi CS';
 
@@ -237,7 +276,7 @@ async function openIgModalBundling(sku) {
             <img src="../books/${bookData.folder}/gambardepan.png" alt="Cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/30x40?text=Buku';">
             <div class="wms-item-info">
               <strong>${bookData.meta.judul}</strong>
-              <small>SKU: ${itemSku} | Penulis: ${bookData.meta.penulis || '-'}</small>
+              <small>SKU: ${itemSku} | ${bookData.meta.penulis || 'Pena Bisa'}</small>
             </div>
           </div>
         `;
@@ -256,42 +295,62 @@ async function openIgModalBundling(sku) {
     itemsContainer.innerHTML = `<p style="font-size:0.8rem; color:var(--text-muted);">Daftar buku penyusun tidak tertera.</p>`;
   }
 
-  // Fetch Deskripsi Markdown
-  const mdBox = document.getElementById('modalBundlingMarkdown');
-  try {
-    const mdRes = await fetch(`${folderPath}/deskripsibundling.md`);
-    if (mdRes.ok) {
-      const mdText = await mdRes.text();
-      mdBox.innerHTML = window.marked ? marked.parse(mdText) : mdText;
-    } else {
-      mdBox.innerText = "Deskripsi paket bundling belum tersedia.";
-    }
-  } catch (e) {
-    mdBox.innerText = "Deskripsi paket bundling belum tersedia.";
+  // Copywriting dari landingpage.json
+  const copywritingBox = document.getElementById('igCopywriting');
+  if (copywritingBox) {
+    copywritingBox.innerText = (bundle.landing && bundle.landing.copywriting_ig) 
+      ? bundle.landing.copywriting_ig 
+      : `Dapatkan promo hemat ${bundle.judul_bundling} resmi dari Penerbit Pena Bisa.`;
   }
 
-  // Render Footer Action Buttons
+  // Live Comments
+  renderLiveComments(sku);
+
+  // FOOTER DIRECT LINK KE PAGE DETAIL BUNDLING FORMAL (TANPA TOMBOL CHECKOUT/WA/CART DI MODAL)
   const footerBox = document.getElementById('modalBundlingFooter');
-  if (bundle.jenis === 'Ebook' && bundle.link_mayar) {
+  if (footerBox) {
     footerBox.innerHTML = `
-      <a href="${bundle.link_mayar}" target="_blank" class="btn-act-mayar">
-        ⚡ Beli Paket E-Book (Mayar Direct) ➔
+      <a href="../detailbundling/index.html?sku=${bundle.sku}" class="btn-direct-detail">
+        Informasi Lengkap & Pemesanan ➔
       </a>
-    `;
-  } else {
-    const waText = encodeURIComponent(`Halo Admin Pena Bisa, saya berminat membeli Paket Bundling:\n*Judul:* ${bundle.judul_bundling}\n*SKU:* ${bundle.sku}\n*Harga:* Rp ${(bundle.harga_bundling || 0).toLocaleString('id-ID')}`);
-    
-    footerBox.innerHTML = `
-      <a href="https://wa.me/${WA_NUMBER}?text=${waText}" target="_blank" class="btn-act-wa">
-        📱 Beli Langsung via WA (CS)
-      </a>
-      <button type="button" class="btn-act-cart" onclick="addBundlingToCart('${bundle.sku}', '${bundle.judul_bundling}', ${bundle.harga_bundling || 0}, '${folderPath}/Poster.png')">
-        🛒 + Masukkan Keranjang Belanja
-      </button>
     `;
   }
 
   document.getElementById('igModalBundling').classList.remove('hidden');
+}
+
+// Slider Control
+function changeSlide(direction) {
+  if (currentCarouselImages.length <= 1) return;
+  currentSlideIndex += direction;
+  
+  if (currentSlideIndex >= currentCarouselImages.length) {
+    currentSlideIndex = 0;
+  } else if (currentSlideIndex < 0) {
+    currentSlideIndex = currentCarouselImages.length - 1;
+  }
+
+  updateCarouselUI();
+}
+
+function goToSlide(index) {
+  currentSlideIndex = index;
+  updateCarouselUI();
+}
+
+function updateCarouselUI() {
+  const slides = document.querySelectorAll('.slide-item');
+  const dots = document.querySelectorAll('.dot');
+
+  slides.forEach((slide, idx) => {
+    if (idx === currentSlideIndex) slide.classList.add('active');
+    else slide.classList.remove('active');
+  });
+
+  dots.forEach((dot, idx) => {
+    if (idx === currentSlideIndex) dot.classList.add('active');
+    else dot.classList.remove('active');
+  });
 }
 
 function closeIgModalBundling() {
@@ -304,18 +363,79 @@ function handleOverlayClick(e) {
   }
 }
 
-// Tambahkan Paket Bundling ke Keranjang Belanja
-function addBundlingToCart(sku, judul, harga, cover) {
-  let cart = JSON.parse(localStorage.getItem('penabisa_cart')) || [];
-  const existing = cart.find(item => item.id === sku);
+// Render Live Comments (Hanya Komentar Asli Pengunjung)
+function renderLiveComments(sku) {
+  const container = document.getElementById('igCommentsList');
+  const countSpan = document.getElementById('commentCount');
+  if (!container) return;
 
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    cart.push({ id: sku, judul: `[Paket] ${judul}`, harga, cover, qty: 1 });
+  const storageKey = `penabisa_comments_bundling_${sku}`;
+  const realComments = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+  if (countSpan) countSpan.innerText = `${realComments.length} ulasan`;
+
+  if (realComments.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 0.8rem 0; text-align: center; color: #94a3b8; font-size: 0.82rem;">
+        💬 Belum ada ulasan untuk paket ini.<br>
+        <span style="font-size: 0.75rem; color: #cbd5e1;">Jadilah yang pertama memberikan ulasan!</span>
+      </div>
+    `;
+    return;
   }
 
-  localStorage.setItem('penabisa_cart', JSON.stringify(cart));
-  updateCartBadge();
-  alert(`✅ Paket "${judul}" berhasil dimasukkan ke keranjang belanja.`);
+  container.innerHTML = realComments.map(c => `
+    <div class="comment-item">
+      <div class="comment-main">
+        <div class="comment-avatar">${c.avatar || '💬'}</div>
+        <div class="comment-content">
+          <strong>${c.username || 'Pengunjung'}</strong>
+          <p>${c.text}</p>
+          <span class="comment-meta">${c.time}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Input Komentar Baru oleh Pengunjung
+function submitNewComment(event) {
+  event.preventDefault();
+  const input = document.getElementById('commentUserInput');
+  if (!input || !input.value.trim() || !currentActiveSku) return;
+
+  const newComment = {
+    username: "Pengunjung",
+    avatar: "💬",
+    text: input.value.trim(),
+    time: "Baru saja"
+  };
+
+  const storageKey = `penabisa_comments_bundling_${currentActiveSku}`;
+  const existingComments = JSON.parse(localStorage.getItem(storageKey)) || [];
+  existingComments.push(newComment);
+
+  localStorage.setItem(storageKey, JSON.stringify(existingComments));
+
+  input.value = '';
+  renderLiveComments(currentActiveSku);
+
+  const scrollBody = document.querySelector('.ig-scrollable-body');
+  if (scrollBody) scrollBody.scrollTop = scrollBody.scrollHeight;
+}
+
+// Interaksi Like Produk
+function toggleProductLike() {
+  const countSpan = document.getElementById('productLikeCount');
+  if (!countSpan) return;
+  let currentLikes = parseInt(countSpan.innerText) || 0;
+
+  const btn = document.getElementById('btnLikeProduct');
+  if (btn.classList.contains('liked')) {
+    btn.classList.remove('liked');
+    countSpan.innerText = Math.max(0, currentLikes - 1);
+  } else {
+    btn.classList.add('liked');
+    countSpan.innerText = currentLikes + 1;
+  }
 }
