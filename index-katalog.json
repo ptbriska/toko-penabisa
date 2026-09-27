@@ -12,7 +12,7 @@
       "tags": ["OSN", "Biologi", "SMA"],
       "jenis": "Cetak",
       "harga_bundling": 250000,
-      "items_sku": ["PB-A0001", "PB-A0002"]
+      "items_sku": ["PB-A0001"]
     },
     {
       "sku": "PB-IB002",
