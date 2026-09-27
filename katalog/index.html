@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Katalog Buku - Toko Penerbit Pena Bisa</title>
+  
+  <!-- Font Google Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Styling Terisolasi Katalog -->
+  <link rel="stylesheet" href="katalog.css">
+</head>
+<body data-page="katalog">
+
+  <!-- Shared Header Injection Container -->
+  <div id="globalHeader"></div>
+
+  <!-- MAIN KATALOG LAYOUT -->
+  <main class="catalog-container">
+    <!-- SIDEBAR FILTER -->
+    <aside class="sidebar-filter">
+      <div class="filter-header">
+        <h3>Filter Etalase</h3>
+        <button type="button" class="btn-reset-filter" onclick="resetAllFilters()">Reset Filter</button>
+      </div>
+
+      <!-- FILTER 1: KATEGORI A-V -->
+      <div class="filter-group">
+        <h4>Kategori Buku</h4>
+        <div id="categoryFilterList" class="filter-scroll-list">
+          <!-- Populated by katalog.js -->
+        </div>
+      </div>
+
+      <!-- FILTER 2: SIFAT BUKU -->
+      <div class="filter-group">
+        <h4>Format / Sifat Buku</h4>
+        <label><input type="checkbox" id="filterCetak" onchange="filterCatalog()"> 📚 Buku Cetak (Fisik)</label>
+        <label><input type="checkbox" id="filterEbook" onchange="filterCatalog()"> 📱 E-Book (Digital)</label>
+      </div>
+
+      <!-- FILTER 3: RENTANG HARGA (CUSTOM) -->
+      <div class="filter-group">
+        <h4>Rentang Harga (Rp)</h4>
+        <div class="price-range-inputs">
+          <input type="number" id="minPriceInput" placeholder="Min (cth: 10000)" oninput="filterCatalog()">
+          <span>-</span>
+          <input type="number" id="maxPriceInput" placeholder="Maks (cth: 150000)" oninput="filterCatalog()">
+        </div>
+      </div>
+
+      <!-- FILTER 4: TAHUN TERBIT -->
+      <div class="filter-group">
+        <h4>Tahun Terbit</h4>
+        <select id="yearSelectFilter" onchange="filterCatalog()">
+          <option value="">Semua Tahun Terbit</option>
+          <!-- Options populated by katalog.js -->
+        </select>
+      </div>
+    </aside>
+
+    <!-- CONTENT PRODUCT GRID -->
+    <section class="catalog-content">
+      <div class="catalog-header">
+        <div>
+          <h2>Etalase Katalog Buku</h2>
+          <p class="sub-text">Pilihan buku fisik dan e-book berkualitas terbitan Pena Bisa</p>
+        </div>
+        <span id="productCount" class="product-count-badge">Menampilkan 0 produk</span>
+      </div>
+
+      <div id="katalogGrid" class="product-grid">
+        <!-- Rendered by katalog.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL POP-UP IG STYLE -->
+  <div id="igModal" class="modal-overlay hidden">
+    <div class="modal-ig-container">
+      <button class="close-modal" onclick="closeIgModal()">&times;</button>
+      <div class="ig-left-carousel" id="igCarousel">
+        <!-- Carousel Slides -->
+      </div>
+      <div class="ig-right-content">
+        <div class="ig-user-header">
+          <div class="ig-avatar">📖</div>
+          <div>
+            <strong>Toko Pena Bisa</strong>
+            <small>Katalog Resmi</small>
+          </div>
+        </div>
+        <div id="igCopywriting" class="ig-copywriting"></div>
+        <div class="ig-actions-dummy">
+          <span>❤️ Suka</span>
+          <span>💬 Ulasan</span>
+          <span>✈️ Bagikan</span>
+          <span>📌 Simpan</span>
+        </div>
+        <div id="igModalFooter"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared Footer Injection Container -->
+  <div id="globalFooter"></div>
+
+  <!-- Script Logic Terisolasi Katalog -->
+  <script src="katalog.js"></script>
+</body>
+</html>
