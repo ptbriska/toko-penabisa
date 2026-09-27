@@ -1,5 +1,5 @@
 /* ==========================================================================
-   INDEX.CSS - Toko Buku Pena Bisa (Modern Light Educational Theme)
+   INDEX.CSS - Modern Educational Theme dengan Banner Promo & Kategori Grid
    ========================================================================== */
 
 :root {
@@ -11,11 +11,10 @@
   --brand-orange: #f97316;
   --brand-gold: #eab308;
   --brand-gradient: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
-  --brand-gradient-gold: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
   --shadow-md: 0 4px 20px -2px rgba(249, 115, 22, 0.08);
-  --shadow-hover: 0 12px 30px -4px rgba(249, 115, 22, 0.15);
+  --shadow-hover: 0 10px 25px -4px rgba(249, 115, 22, 0.15);
   
   --border-color: #e2e8f0;
   --radius-lg: 16px;
@@ -26,14 +25,14 @@
 body {
   background-color: var(--bg-page);
   color: var(--text-main);
-  font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   margin: 0;
   line-height: 1.6;
 }
 
-/* NAVBAR LIGHT MODERN */
+/* NAVBAR */
 .navbar {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-color);
   position: sticky;
@@ -101,13 +100,6 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  transition: all 0.2s ease;
-}
-
-.btn-cart-light:hover {
-  background: var(--brand-orange);
-  color: #ffffff;
-  box-shadow: var(--shadow-md);
 }
 
 .badge-count {
@@ -116,11 +108,6 @@ body {
   font-size: 0.75rem;
   padding: 0.15rem 0.5rem;
   border-radius: 20px;
-}
-
-.btn-cart-light:hover .badge-count {
-  background: #ffffff;
-  color: var(--brand-orange);
 }
 
 .btn-publisher {
@@ -132,22 +119,39 @@ body {
   border: 1px solid var(--border-color);
 }
 
-/* HERO SECTION CONTAINER CONTROL */
+/* BANNER PROMOSI & HERO WRAPPER */
 .hero-wrapper {
   max-width: 1200px;
-  margin: 2rem auto;
+  margin: 1.5rem auto 2rem auto;
   padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.banner-promo-container {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.banner-promo-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 320px;
+  object-fit: cover;
 }
 
 .hero-card {
   background: linear-gradient(135deg, #ffffff 0%, #fff7ed 100%);
   border: 1px solid #ffedd5;
   border-radius: var(--radius-lg);
-  padding: 4rem 2rem;
+  padding: 3rem 2rem;
   text-align: center;
-  box-shadow: var(--shadow-md);
-  position: relative;
-  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .badge-pill {
@@ -158,23 +162,22 @@ body {
   font-size: 0.85rem;
   padding: 0.35rem 1rem;
   border-radius: 30px;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
   border: 1px solid #fed7aa;
 }
 
 .hero-card h1 {
-  font-size: 2.6rem;
+  font-size: 2.2rem;
   font-weight: 800;
   color: #0f172a;
-  margin: 0 0 1rem 0;
-  letter-spacing: -0.02em;
+  margin: 0 0 0.8rem 0;
 }
 
 .hero-card p {
   color: var(--text-muted);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   max-width: 650px;
-  margin: 0 auto 2rem auto;
+  margin: 0 auto 1.5rem auto;
 }
 
 .hero-buttons {
@@ -187,16 +190,10 @@ body {
   background: var(--brand-gradient);
   color: #ffffff;
   font-weight: 700;
-  padding: 0.85rem 2rem;
+  padding: 0.75rem 1.8rem;
   border-radius: 30px;
   text-decoration: none;
-  box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
-  transition: all 0.2s ease;
-}
-
-.btn-brand-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+  box-shadow: 0 4px 15px rgba(249, 115, 22, 0.25);
 }
 
 .btn-brand-secondary {
@@ -204,20 +201,15 @@ body {
   color: var(--text-main);
   border: 1px solid var(--border-color);
   font-weight: 700;
-  padding: 0.85rem 2rem;
+  padding: 0.75rem 1.8rem;
   border-radius: 30px;
   text-decoration: none;
-  transition: all 0.2s ease;
 }
 
-.btn-brand-secondary:hover {
-  background: #f1f5f9;
-}
-
-/* SECTION CONTAINER */
+/* SECTION WRAPPER */
 .section-wrapper {
   max-width: 1200px;
-  margin: 3.5rem auto;
+  margin: 3rem auto;
   padding: 0 1.5rem;
 }
 
@@ -232,16 +224,8 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 1.8rem;
-  transition: all 0.3s ease;
+  padding: 1.5rem;
   box-shadow: var(--shadow-sm);
-  position: relative;
-}
-
-.info-card-modern:hover {
-  border-color: #fdba74;
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
 }
 
 .info-card-modern .badge-card {
@@ -252,115 +236,87 @@ body {
   padding: 0.2rem 0.6rem;
   border-radius: 6px;
   display: inline-block;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.6rem;
 }
 
 .info-card-header {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  margin-bottom: 0.8rem;
-}
-
-.info-card-header .icon {
-  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
 }
 
 .info-card-header h3 {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: #0f172a;
 }
 
 .info-card-modern p {
   color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   margin: 0;
 }
 
-/* SECTION HEADER */
-.section-title-box {
-  margin-bottom: 2rem;
-}
-
-.section-title-box h2 {
-  font-size: 1.8rem;
-  color: #0f172a;
-  margin: 0 0 0.3rem 0;
-}
-
-.section-title-box p {
-  color: var(--text-muted);
-  margin: 0;
-}
-
-/* PRODUCT GRID LIGHT MODERNE */
-.product-grid-light {
+/* GRID KATEGORI (A-V) */
+.category-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.8rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
 }
 
-.book-card-light {
+.category-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 1.2rem;
+  padding: 1rem 1.2rem;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: all 0.3s ease;
+  align-items: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  color: var(--text-main);
+  transition: all 0.2s ease;
   box-shadow: var(--shadow-sm);
 }
 
-.book-card-light:hover {
+.category-card:hover {
   border-color: #fdba74;
-  transform: translateY(-5px);
+  background: #fff7ed;
+  transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
 }
 
-.book-card-light img {
-  width: 100%;
-  height: 260px;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
-  margin-bottom: 1rem;
-}
-
-.book-card-light h4 {
-  font-size: 1.05rem;
-  color: #0f172a;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.4;
-}
-
-.book-card-light .price-light {
-  color: var(--brand-orange);
-  font-weight: 800;
-  font-size: 1.15rem;
-  margin-bottom: 1rem;
-}
-
-.btn-card-action {
-  background: #ffffff;
-  border: 1.5px solid var(--brand-orange);
-  color: var(--brand-orange);
-  padding: 0.65rem;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;
-}
-
-.btn-card-action:hover {
+.category-code {
   background: var(--brand-orange);
   color: #ffffff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-/* RESPONSIVE DESIGN */
+.category-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.category-icon {
+  font-size: 1.2rem;
+}
+
+.category-name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #0f172a;
+}
+
 @media (max-width: 900px) {
   .info-grid { grid-template-columns: 1fr; }
-  .hero-card h1 { font-size: 2rem; }
-  .hero-buttons { flex-direction: column; }
+  .category-grid { grid-template-columns: repeat(2, 1fr); }
 }
