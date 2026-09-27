@@ -142,7 +142,7 @@ function renderKatalogView(items) {
   if (!container) return;
 
   if (items.length === 0) {
-    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">Buku untuk kategori/filter ini belum tersedia.</p>';
+    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">Buku untuk pencarian/kategori ini belum tersedia.</p>';
   } else {
     container.innerHTML = items.map(item => createProductCardHTML(item, 'book')).join('');
   }
@@ -418,6 +418,15 @@ function checkoutViaWA() {
 }
 
 // 9. SEARCH & FILTER HELPERS UNTUK KATALOG
+function handleGlobalSearch(event) {
+  if (event.key === 'Enter') {
+    const keyword = event.target.value.trim();
+    if (keyword) {
+      window.location.href = `katalog.html?search=${encodeURIComponent(keyword)}`;
+    }
+  }
+}
+
 function populateCategoryFilters() {
   const filterBox = document.getElementById('categoryFilterList');
   if (!filterBox) return;
@@ -431,6 +440,12 @@ function populateCategoryFilters() {
 function applyUrlCategoryFilter() {
   const params = new URLSearchParams(window.location.search);
   const targetCategory = params.get('kategori');
+  const targetSearch = params.get('search');
+
+  if (targetSearch) {
+    const searchInput = document.getElementById('globalSearchInput') || document.getElementById('katalogSearch');
+    if (searchInput) searchInput.value = targetSearch;
+  }
 
   if (targetCategory) {
     const checkboxes = document.querySelectorAll('#categoryFilterList input[type="checkbox"]');
@@ -445,7 +460,8 @@ function applyUrlCategoryFilter() {
 }
 
 function filterCatalog() {
-  const search = document.getElementById('katalogSearch')?.value.toLowerCase() || '';
+  const searchInput = document.getElementById('globalSearchInput') || document.getElementById('katalogSearch');
+  const search = searchInput?.value.toLowerCase() || '';
   const isCetak = document.getElementById('filterCetak')?.checked;
   const isEbook = document.getElementById('filterEbook')?.checked;
 
