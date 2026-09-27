@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Toko Pena Bisa - Core JavaScript Engine
+   Toko Pena Bisa - Core JavaScript Engine (Versi 1.0 Updated)
    ========================================================================== */
 
 const WA_NUMBER = "6282268118842";
@@ -9,7 +9,7 @@ let catalogBooks = [];
 let catalogBundling = [];
 let cart = JSON.parse(localStorage.getItem('penabisa_cart')) || [];
 
-// INITIALIZATION
+// 1. INITIALIZATION & ROUTER
 document.addEventListener("DOMContentLoaded", async () => {
   updateCartBadge();
   await loadAllCatalogData();
@@ -18,11 +18,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   switch (currentPage) {
     case 'beranda':
-      renderBerandaView();
+      await renderBerandaView();
       break;
     case 'katalog':
-      renderKatalogView(catalogBooks);
       populateCategoryFilters();
+      applyUrlCategoryFilter();
       break;
     case 'bundling':
       renderBundlingView(catalogBundling);
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// FETCH DATA FROM GITHUB REPO
+// 2. FETCH ALL DATA FROM GITHUB REPO
 async function loadAllCatalogData() {
   try {
     const res = await fetch(INDEX_URL);
@@ -63,21 +63,90 @@ async function loadAllCatalogData() {
   }
 }
 
-// RENDER VIEWS
-function renderBerandaView() {
-  const container = document.getElementById('bestSellerGrid');
-  if (!container) return;
+// 3. RENDER BERANDA (MEMBACA data/index.json)
+async function renderBerandaView() {
+  try {
+    const res = await fetch('data/index.json');
+    const data = await res.json();
 
-  const bestSellers = catalogBooks.filter(item => item.meta.is_best_seller);
-  container.innerHTML = bestSellers.map(item => createProductCardHTML(item, 'book')).join('');
+    // A. Render Banner Promosi Utama
+    if (data.banner_promo) {
+      const bannerImg = document.getElementById('bannerPromoImg');
+      const bannerLink = document.getElementById('bannerPromoLink');
+      if (bannerImg) {
+        bannerImg.src = data.banner_promo.image_url;
+        bannerImg.alt = data.banner_promo.alt_text || 'Banner Promosi';
+      }
+      if (bannerLink) bannerLink.href = data.banner_promo.link || 'katalog.html';
+    }
+
+    // B. Render Hero Card Text
+    if (data.hero) {
+      const elBadge = document.getElementById('heroBadge');
+      const elHead = document.getElementById('heroHeadline');
+      const elSub = document.getElementById('heroSubheadline');
+      const elCta1 = document.getElementById('heroCtaPrimary');
+      const elCta2 = document.getElementById('heroCtaSecondary');
+
+      if (elBadge) elBadge.innerText = data.hero.badge;
+      if (elHead) elHead.innerText = data.hero.headline;
+      if (elSub) elSub.innerText = data.hero.subheadline;
+      if (elCta1) {
+        elCta1.innerText = data.hero.cta_primary_text;
+        elCta1.href = data.hero.cta_primary_link;
+      }
+      if (elCta2) {
+        elCta2.innerText = data.hero.cta_secondary_text;
+        elCta2.href = data.hero.cta_secondary_link;
+      }
+    }
+
+    // C. Render Info Services Cards
+    const infoContainer = document.getElementById('infoServicesGrid');
+    if (infoContainer && data.info_services) {
+      infoContainer.innerHTML = data.info_services.map(info => `
+        <div class="info-card-modern">
+          <span class="badge-card">${info.badge}</span>
+          <div class="info-card-header">
+            <span class="icon">${info.icon}</span>
+            <h3>${info.title}</h3>
+          </div>
+          <p>${info.description}</p>
+        </div>
+      `).join('');
+    }
+
+    // D. Render Kategori Grid (Kategori A–V)
+    const catContainer = document.getElementById('categoryGrid');
+    if (catContainer && data.categories) {
+      catContainer.innerHTML = data.categories.map(cat => `
+        <a href="katalog.html?kategori=${encodeURIComponent(cat.name)}" class="category-card">
+          <div class="category-code">${cat.code}</div>
+          <div class="category-info">
+            <span class="category-icon">${cat.icon}</span>
+            <span class="category-name">${cat.name}</span>
+          </div>
+        </a>
+      `).join('');
+    }
+
+  } catch (err) {
+    console.error("Gagal memuat data/index.json untuk beranda:", err);
+  }
 }
 
+// 4. RENDER ETALASE KATALOG & BUNDLING
 function renderKatalogView(items) {
   const container = document.getElementById('katalogGrid');
   const countSpan = document.getElementById('productCount');
   if (!container) return;
 
-  container.innerHTML = items.map(item => createProductCardHTML(item, 'book')).join('');
+  if (items.length === 0) {
+    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">Buku untuk kategori/filter ini belum tersedia.</p>';
+  } else {
+    container.innerHTML = items.map(item => createProductCardHTML(item, 'book')).join('');
+  }
+
   if (countSpan) countSpan.innerText = `Menampilkan ${items.length} produk`;
 }
 
@@ -97,16 +166,16 @@ function createProductCardHTML(item, type) {
     : (item.meta.harga_ebook ? `E-Book: Rp ${item.meta.harga_ebook.toLocaleString('id-ID')}` : 'Lihat Info');
 
   return `
-    <div class="product-card">
+    <div class="book-card-light">
       <img src="${item.folder}/${coverImg}" alt="${item.meta.judul}" loading="lazy">
       <h4>${item.meta.judul}</h4>
-      <div class="price">${priceDisplay}</div>
-      <button onclick="openIgModal('${type}', '${item.folderName}')">Cek Info Buku</button>
+      <div class="price-light">${priceDisplay}</div>
+      <button class="btn-card-action" onclick="openIgModal('${type}', '${item.folderName}')">Cek Info Buku</button>
     </div>
   `;
 }
 
-// IG MODAL POP-UP LOGIC
+// 5. IG MODAL POP-UP LOGIC
 function openIgModal(type, folderName) {
   const dataset = type === 'book' ? catalogBooks : catalogBundling;
   const item = dataset.find(i => i.folderName === folderName);
@@ -117,27 +186,34 @@ function openIgModal(type, folderName) {
   const copywriting = document.getElementById('igCopywriting');
   const footer = document.getElementById('igModalFooter');
 
-  carousel.innerHTML = item.landing.carousel_images.map(img => 
-    `<img src="${item.folder}/${img}" alt="Slide">`
-  ).join('');
+  if (carousel) {
+    carousel.innerHTML = item.landing.carousel_images.map(img => 
+      `<img src="${item.folder}/${img}" alt="Slide">`
+    ).join('');
+  }
 
-  copywriting.innerText = item.landing.copywriting_ig || item.landing.headline;
+  if (copywriting) {
+    copywriting.innerText = item.landing.copywriting_ig || item.landing.headline;
+  }
 
   const detailTarget = type === 'book' ? 'detailbuku.html' : 'detailbundling.html';
-  footer.innerHTML = `
-    <a href="${detailTarget}?folder=${folderName}" class="btn-primary" style="display:block; text-align:center;">
-      Informasi Lengkap & Pemesanan
-    </a>
-  `;
+  if (footer) {
+    footer.innerHTML = `
+      <a href="${detailTarget}?folder=${folderName}" class="btn-brand-primary" style="display:block; text-align:center;">
+        Informasi Lengkap & Pemesanan
+      </a>
+    `;
+  }
 
-  modal.classList.remove('hidden');
+  if (modal) modal.classList.remove('hidden');
 }
 
 function closeIgModal() {
-  document.getElementById('igModal').classList.add('hidden');
+  const modal = document.getElementById('igModal');
+  if (modal) modal.classList.add('hidden');
 }
 
-// DETAIL PAGES LOGIC
+// 6. DETAIL BUKU PAGE LOGIC
 async function initDetailBukuPage() {
   const params = new URLSearchParams(window.location.search);
   const folderName = params.get('folder');
@@ -145,12 +221,11 @@ async function initDetailBukuPage() {
 
   try {
     const meta = await fetch(`books/${folderName}/metabuku.json`).then(r => r.json());
-    const landing = await fetch(`books/${folderName}/landingpage.json`).then(r => r.json());
     const mdText = await fetch(`books/${folderName}/deskripsibuku.md`).then(r => r.text());
 
-    document.getElementById('detailLoading').classList.add('hidden');
-    document.getElementById('bookView').classList.remove('hidden');
-    document.getElementById('bookExtra').classList.remove('hidden');
+    document.getElementById('detailLoading')?.classList.add('hidden');
+    document.getElementById('bookView')?.classList.remove('hidden');
+    document.getElementById('bookExtra')?.classList.remove('hidden');
 
     document.getElementById('bookTitle').innerText = meta.judul;
     document.getElementById('bookAuthor').innerText = meta.penulis;
@@ -158,31 +233,31 @@ async function initDetailBukuPage() {
     document.getElementById('isbnEbookText').innerText = meta.isbn_ebook || '-';
     document.getElementById('bookCategory').innerText = meta.kategori || 'Umum';
 
-    // Images
+    // Main Cover Image
     const mainImg = document.getElementById('bookMainImage');
-    mainImg.innerHTML = `<img src="books/${folderName}/gambardepan.png" id="currentMainImg">`;
+    if (mainImg) mainImg.innerHTML = `<img src="books/${folderName}/gambardepan.png" id="currentMainImg">`;
 
-    // Ebook Section
+    // Format E-Book (Mayar Direct)
     if (meta.links && meta.links.mayar_ebook) {
       const ebookCard = document.getElementById('ebookOptionCard');
-      ebookCard.classList.remove('hidden');
+      if (ebookCard) ebookCard.classList.remove('hidden');
       document.getElementById('priceEbookTag').innerText = `Rp ${meta.harga_ebook.toLocaleString('id-ID')}`;
       document.getElementById('btnMayar').href = meta.links.mayar_ebook;
     }
 
-    // Cetak Section
+    // Format Cetak (Shopee, Tokopedia, WA, & Cart)
     if (meta.harga_cetak) {
       const cetakCard = document.getElementById('cetakOptionCard');
-      cetakCard.classList.remove('hidden');
+      if (cetakCard) cetakCard.classList.remove('hidden');
       document.getElementById('priceCetakTag').innerText = `Rp ${meta.harga_cetak.toLocaleString('id-ID')}`;
 
       if (meta.links.shopee) {
         const btn = document.getElementById('btnShopee');
-        btn.href = meta.links.shopee; btn.classList.remove('hidden');
+        if (btn) { btn.href = meta.links.shopee; btn.classList.remove('hidden'); }
       }
       if (meta.links.tokopedia) {
         const btn = document.getElementById('btnTokopedia');
-        btn.href = meta.links.tokopedia; btn.classList.remove('hidden');
+        if (btn) { btn.href = meta.links.tokopedia; btn.classList.remove('hidden'); }
       }
 
       const waMsg = encodeURIComponent(`Halo Pena Bisa, saya berminat membeli buku cetak: ${meta.judul}`);
@@ -194,13 +269,16 @@ async function initDetailBukuPage() {
     }
 
     // Markdown Render
-    document.getElementById('bookMarkdown').innerHTML = marked.parse(mdText);
+    if (typeof marked !== 'undefined') {
+      document.getElementById('bookMarkdown').innerHTML = marked.parse(mdText);
+    }
 
   } catch (err) {
     console.error("Gagal memuat detail buku:", err);
   }
 }
 
+// 7. DETAIL BUNDLING PAGE LOGIC
 async function initDetailBundlingPage() {
   const params = new URLSearchParams(window.location.search);
   const folderName = params.get('folder');
@@ -208,17 +286,17 @@ async function initDetailBundlingPage() {
 
   try {
     const meta = await fetch(`bundling/${folderName}/metabuku.json`).then(r => r.json());
-    const landing = await fetch(`bundling/${folderName}/landingpage.json`).then(r => r.json());
     const mdText = await fetch(`bundling/${folderName}/deskripsibuku.md`).then(r => r.text());
 
-    document.getElementById('bundlingLoading').classList.add('hidden');
-    document.getElementById('bundlingView').classList.remove('hidden');
-    document.getElementById('bundlingExtra').classList.remove('hidden');
+    document.getElementById('bundlingLoading')?.classList.add('hidden');
+    document.getElementById('bundlingView')?.classList.remove('hidden');
+    document.getElementById('bundlingExtra')?.classList.remove('hidden');
 
     document.getElementById('bundlingTitle').innerText = meta.judul;
     document.getElementById('bundlingPriceTag').innerText = `Rp ${meta.harga_cetak.toLocaleString('id-ID')}`;
 
-    document.getElementById('bundlingFeedMain').innerHTML = `<img src="bundling/${folderName}/feed1.png">`;
+    const mainFeed = document.getElementById('bundlingFeedMain');
+    if (mainFeed) mainFeed.innerHTML = `<img src="bundling/${folderName}/feed1.png">`;
 
     // Direct Buttons
     const waMsg = encodeURIComponent(`Halo Pena Bisa, saya berminat beli Paket Bundling: ${meta.judul}`);
@@ -228,14 +306,16 @@ async function initDetailBundlingPage() {
       addToCart(meta.id || folderName, meta.judul, meta.harga_cetak, `bundling/${folderName}/feed1.png`);
     };
 
-    document.getElementById('bundlingMarkdown').innerHTML = marked.parse(mdText);
+    if (typeof marked !== 'undefined') {
+      document.getElementById('bundlingMarkdown').innerHTML = marked.parse(mdText);
+    }
 
   } catch (err) {
     console.error("Gagal memuat detail bundling:", err);
   }
 }
 
-// CART ENGINE & LOCAL STORAGE
+// 8. CART ENGINE & LOCAL STORAGE
 function addToCart(id, judul, harga, cover) {
   const existing = cart.find(item => item.id === id);
   if (existing) {
@@ -265,13 +345,13 @@ function renderCartPage() {
 
   if (cart.length === 0) {
     tbody.innerHTML = '';
-    emptyState.classList.remove('hidden');
+    emptyState?.classList.remove('hidden');
     document.getElementById('summaryTotalItems').innerText = '0 produk';
     document.getElementById('summaryTotalPrice').innerText = 'Rp 0';
     return;
   }
 
-  emptyState.classList.add('hidden');
+  emptyState?.classList.add('hidden');
   let totalPrice = 0;
   let totalItems = 0;
 
@@ -337,7 +417,7 @@ function checkoutViaWA() {
   window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
 }
 
-// SEARCH & FILTER HELPERS
+// 9. SEARCH & FILTER HELPERS UNTUK KATALOG
 function populateCategoryFilters() {
   const filterBox = document.getElementById('categoryFilterList');
   if (!filterBox) return;
@@ -346,6 +426,22 @@ function populateCategoryFilters() {
   filterBox.innerHTML = categories.map(cat => `
     <label><input type="checkbox" value="${cat}" onchange="filterCatalog()"> ${cat}</label>
   `).join('');
+}
+
+function applyUrlCategoryFilter() {
+  const params = new URLSearchParams(window.location.search);
+  const targetCategory = params.get('kategori');
+
+  if (targetCategory) {
+    const checkboxes = document.querySelectorAll('#categoryFilterList input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+      if (cb.value.toLowerCase() === targetCategory.toLowerCase()) {
+        cb.checked = true;
+      }
+    });
+  }
+
+  filterCatalog();
 }
 
 function filterCatalog() {
