@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paket Bundling - Toko Penerbit Pena Bisa</title>
+
+  <!-- Font Google Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Markdown Parser CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Styling Terisolasi Bundling -->
+  <link rel="stylesheet" href="bundling.css">
+</head>
+<body data-page="bundling">
+
+  <!-- Shared Header Injection Container -->
+  <div id="globalHeader"></div>
+
+  <!-- MAIN BUNDLING LAYOUT -->
+  <main class="bundling-container">
+    <!-- SIDEBAR FILTER BUNDLING -->
+    <aside class="sidebar-filter">
+      <div class="filter-header">
+        <h3>Filter Bundling</h3>
+        <button type="button" class="btn-reset-filter" onclick="resetBundlingFilters()">Reset Filter</button>
+      </div>
+
+      <!-- FILTER 1: TAG BUNDLING DYNAMIC -->
+      <div class="filter-group">
+        <h4>Tag / Topik Bundling</h4>
+        <div id="tagFilterList" class="filter-scroll-list">
+          <!-- Populated by bundling.js -->
+        </div>
+      </div>
+
+      <!-- FILTER 2: JENIS BUKU (E-Book / Cetak) -->
+      <div class="filter-group">
+        <h4>Jenis / Format Bundling</h4>
+        <label><input type="checkbox" id="filterCetakBundling" onchange="filterBundling()"> 📚 Paket Buku Cetak</label>
+        <label><input type="checkbox" id="filterEbookBundling" onchange="filterBundling()"> 📱 Paket E-Book Digital</label>
+      </div>
+
+      <!-- FILTER 3: RENTANG HARGA -->
+      <div class="filter-group">
+        <h4>Rentang Harga (Rp)</h4>
+        <div class="price-range-inputs">
+          <input type="number" id="minPriceBundling" placeholder="Min" oninput="filterBundling()">
+          <span>-</span>
+          <input type="number" id="maxPriceBundling" placeholder="Maks" oninput="filterBundling()">
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTENT PRODUCT GRID ALA FEED IG -->
+    <section class="bundling-content">
+      <div class="bundling-header">
+        <div>
+          <h2>🎁 Etalase Paket Bundling Hemat</h2>
+          <p class="sub-text">Dapatkan gabungan buku terbitan terbaik dengan penawaran harga spesial</p>
+        </div>
+        <span id="bundlingCountBadge" class="bundling-count-badge">Menampilkan 0 paket</span>
+      </div>
+
+      <div id="bundlingGrid" class="bundling-grid">
+        <!-- Rendered by bundling.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL POP-UP DETAIL BUNDLING (ALA IG WEB + AUTOMATIC WMS REKAP) -->
+  <div id="igModalBundling" class="modal-overlay hidden" onclick="handleOverlayClick(event)">
+    <div class="modal-ig-container">
+      <button type="button" class="close-modal" onclick="closeIgModalBundling()" title="Tutup">&times;</button>
+      
+      <!-- SISI KIRI: POSTER BUNDLING -->
+      <div class="ig-left-carousel">
+        <div id="posterBox" class="poster-wrapper">
+          <!-- Poster.png Injected via JS -->
+        </div>
+      </div>
+
+      <!-- SISI KANAN: DETAIL REKAP BUKU & ACTION -->
+      <div class="ig-right-content">
+        <!-- Header -->
+        <div class="ig-user-header">
+          <div class="ig-avatar">🎁</div>
+          <div>
+            <strong id="modalBundlingTitle">Judul Bundling</strong>
+            <small id="modalBundlingSku">SKU: PB-IB001</small>
+          </div>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="ig-scrollable-body">
+          <div id="modalBundlingTags" class="tag-badges"></div>
+          
+          <div class="price-box">
+            <span class="price-label">Harga Paket Bundling:</span>
+            <strong id="modalBundlingPrice" class="price-value">Rp 0</strong>
+          </div>
+
+          <!-- REKAP DRAFT BUKU PENYUSUN DARI WMS SKU -->
+          <div class="wms-rekap-card">
+            <h4>📚 Daftar Buku Dalam Paket Ini:</h4>
+            <div id="modalItemsList" class="wms-items-list">
+              <!-- Injected via bundling.js -->
+            </div>
+          </div>
+
+          <!-- Deskripsi Markdown Bundling -->
+          <div class="bundling-markdown-box">
+            <h4>📄 Rincian Promo & Deskripsi:</h4>
+            <div id="modalBundlingMarkdown" class="markdown-body"></div>
+          </div>
+        </div>
+
+        <!-- Footer Action -->
+        <div id="modalBundlingFooter" class="ig-footer">
+          <!-- Action Buttons injected via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared Footer Injection Container -->
+  <div id="globalFooter"></div>
+
+  <!-- Script Logic Terisolasi Bundling -->
+  <script src="bundling.js"></script>
+</body>
+</html>
