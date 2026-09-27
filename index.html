@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Toko Penerbit Pena Bisa - Toko Buku Literasi Modern</title>
   
-  <!-- Font Modern Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Index Standalone CSS -->
   <link rel="stylesheet" href="css/index.css">
 </head>
 <body data-page="beranda">
@@ -39,8 +37,14 @@
     </div>
   </header>
 
-  <!-- HERO BANNER PROMOSI -->
+  <!-- BANNER PROMO & HERO WRAPPER -->
   <div class="hero-wrapper">
+    <!-- BANNER PROMOSI UTAMA -->
+    <a id="bannerPromoLink" href="katalog.html" class="banner-promo-container">
+      <img id="bannerPromoImg" src="assets/banner-default.png" alt="Banner Promosi Pena Bisa">
+    </a>
+
+    <!-- HERO INTRO CARD -->
     <section class="hero-card">
       <span id="heroBadge" class="badge-pill">Loading...</span>
       <h1 id="heroHeadline">Toko Buku Resmi Pena Bisa</h1>
@@ -53,29 +57,28 @@
     </section>
   </div>
 
-  <!-- INFORMASI LAYANAN (3 CARDS) -->
+  <!-- INFORMASI LAYANAN -->
   <div class="section-wrapper">
     <section class="info-grid" id="infoServicesGrid">
-      <!-- Injected dynamically via JS from data/index.json -->
+      <!-- Injected via JS dari data/index.json -->
     </section>
   </div>
 
-  <!-- BUKU BEST SELLER SECTIONS -->
+  <!-- SHOWCASE KATEGORI LENGKAP (KATEGORI A-V) -->
   <div class="section-wrapper">
     <section>
       <div class="section-title-box">
-        <span id="bestSellerBadge" class="badge-pill">Pilihan Pembaca</span>
-        <h2 id="bestSellerTitle">🔥 Buku Best Seller</h2>
-        <p id="bestSellerSubtitle">Koleksi terfavorit yang paling banyak dicari</p>
+        <span id="catBadge" class="badge-pill">Eksplorasi Literasi</span>
+        <h2 id="catTitle">🏷️ Kategori Buku Terbitan</h2>
+        <p id="catSubtitle">Pilih bidang keilmuan dan minat baca yang Anda cari</p>
       </div>
 
-      <div id="bestSellerGrid" class="product-grid-light">
-        <!-- Injected dynamically via JS -->
+      <div id="categoryGrid" class="category-grid">
+        <!-- Injected via JS dari data/index.json -->
       </div>
     </section>
   </div>
 
-  <!-- SCRIPT ENGINE -->
   <script src="js/main.js"></script>
 </body>
 </html>
