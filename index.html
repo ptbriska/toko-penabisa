@@ -3,99 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Beranda - Toko Penerbit Pena Bisa</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>Toko Penerbit Pena Bisa - Toko Buku Literasi Modern</title>
+  
+  <!-- Font Modern Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Index Standalone CSS -->
+  <link rel="stylesheet" href="css/index.css">
 </head>
 <body data-page="beranda">
 
-  <!-- HEADER GLOBAL -->
+  <!-- NAVBAR LIGHT MODERN -->
   <header class="navbar">
-    <div class="navbar-brand">
-      <a href="index.html" class="logo">Toko Pena Bisa</a>
-    </div>
-    <nav class="nav-menu">
-      <a href="index.html" class="active">Beranda</a>
-      <a href="katalog.html">Katalog</a>
-      <a href="bundling.html">Paket Bundling</a>
-    </nav>
-    <div class="nav-actions">
-      <div class="search-box">
-        <input type="text" id="globalSearch" placeholder="Cari judul/penulis..." onkeyup="handleSearch(event)">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        Toko <span>Pena Bisa</span>
+      </a>
+      
+      <nav class="nav-links">
+        <a href="index.html" class="active">Beranda</a>
+        <a href="katalog.html">Katalog</a>
+        <a href="bundling.html">Paket Bundling</a>
+      </nav>
+
+      <div class="nav-right">
+        <a href="cart.html" class="btn-cart-light">
+          🛒 Keranjang <span id="cartBadge" class="badge-count">0</span>
+        </a>
+        <a href="https://penabisa.com" target="_blank" rel="noopener" class="btn-publisher">
+          Web Utama ↗
+        </a>
       </div>
-      <button class="btn-cart-nav" onclick="toggleCartModal()">
-        🛒 Keranjang <span id="cartBadge" class="badge">0</span>
-      </button>
-      <a href="https://penabisa.com" target="_blank" rel="noopener" class="btn-shortcut">Web Penerbit ↗</a>
     </div>
   </header>
 
   <!-- HERO BANNER PROMOSI -->
-  <section class="hero-banner">
-    <div class="banner-content">
-      <h1>Selamat Datang di Toko Resmi Pena Bisa</h1>
-      <p>Dapatkan buku-buku literasi berkualitas, karya terbaik penulis nusantara dalam format Cetak dan E-Book.</p>
-      <a href="katalog.html" class="btn-primary">Jelajahi Katalog</a>
-    </div>
-  </section>
-
-  <!-- INFORMASI LAYANAN -->
-  <section class="info-section">
-    <div class="info-card">
-      <h3>📖 Tentang Produk</h3>
-      <p>Setiap terbitan membawa identitas resmi ISBN Cetak dan/atau Digital (E-Book) resmi terdaftar.</p>
-    </div>
-    <div class="info-card">
-      <h3>🛒 Cara Pembelian</h3>
-      <p>Pilih buku cetak untuk rekap via WA / Marketplace, atau akses langsung E-Book via platform Mayar.</p>
-    </div>
-    <div class="info-card">
-      <h3>🚚 Informasi Kurir</h3>
-      <p>Pengiriman buku fisik mendukung berbagai jasa ekspedisi terpercaya dengan kalkulasi manual via admin WA.</p>
-    </div>
-  </section>
-
-  <!-- BUKU BEST SELLER -->
-  <section class="best-seller-section">
-    <h2>🔥 Buku Best Seller</h2>
-    <div id="bestSellerGrid" class="product-grid">
-      <!-- Injected by main.js (filtered by is_best_seller: true) -->
-    </div>
-  </section>
-
-  <!-- MODAL IG POP-UP -->
-  <div id="igModal" class="modal-overlay hidden">
-    <div class="modal-ig-container">
-      <button class="close-modal" onclick="closeIgModal()">&times;</button>
-      <div class="ig-left-carousel" id="igCarousel"></div>
-      <div class="ig-right-content">
-        <div id="igCopywriting" class="ig-copywriting"></div>
-        <div class="ig-actions-dummy">
-          <span>❤️ Suka</span> <span>💬 Komentar</span> <span>✈️ Bagikan</span> <span>📌 Simpan</span>
-        </div>
-        <div id="igModalFooter" class="ig-footer"></div>
+  <div class="hero-wrapper">
+    <section class="hero-card">
+      <span id="heroBadge" class="badge-pill">Loading...</span>
+      <h1 id="heroHeadline">Toko Buku Resmi Pena Bisa</h1>
+      <p id="heroSubheadline">Memuat informasi penerbitan...</p>
+      
+      <div class="hero-buttons">
+        <a id="heroCtaPrimary" href="katalog.html" class="btn-brand-primary">Jelajahi Katalog</a>
+        <a id="heroCtaSecondary" href="bundling.html" class="btn-brand-secondary">Paket Bundling</a>
       </div>
-    </div>
+    </section>
   </div>
 
-  <!-- MODAL KERANJANG BELANJA -->
-  <div id="cartModal" class="modal-overlay hidden">
-    <div class="modal-cart-container">
-      <div class="cart-header">
-        <h2>Keranjang Belanja (Buku Cetak)</h2>
-        <button class="close-modal" onclick="toggleCartModal()">&times;</button>
-      </div>
-      <div id="cartItemsList" class="cart-items-list"></div>
-      <div class="cart-summary">
-        <span>Total Pembelian:</span>
-        <strong id="cartTotal">Rp 0</strong>
-      </div>
-      <div class="cart-actions">
-        <button onclick="clearCart()" class="btn-danger">Kosongkan Keranjang</button>
-        <button onclick="checkoutViaWA()" class="btn-wa">Rekap & Beli via WA</button>
-      </div>
-    </div>
+  <!-- INFORMASI LAYANAN (3 CARDS) -->
+  <div class="section-wrapper">
+    <section class="info-grid" id="infoServicesGrid">
+      <!-- Injected dynamically via JS from data/index.json -->
+    </section>
   </div>
 
+  <!-- BUKU BEST SELLER SECTIONS -->
+  <div class="section-wrapper">
+    <section>
+      <div class="section-title-box">
+        <span id="bestSellerBadge" class="badge-pill">Pilihan Pembaca</span>
+        <h2 id="bestSellerTitle">🔥 Buku Best Seller</h2>
+        <p id="bestSellerSubtitle">Koleksi terfavorit yang paling banyak dicari</p>
+      </div>
+
+      <div id="bestSellerGrid" class="product-grid-light">
+        <!-- Injected dynamically via JS -->
+      </div>
+    </section>
+  </div>
+
+  <!-- SCRIPT ENGINE -->
   <script src="js/main.js"></script>
 </body>
 </html>
