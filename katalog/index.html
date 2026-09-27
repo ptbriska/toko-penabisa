@@ -78,7 +78,7 @@
     </section>
   </main>
 
-  <!-- MODAL POP-UP ALA INSTAGRAM WEB (FLEKSIBEL 1 - 8+ GAMBAR) -->
+  <!-- MODAL POP-UP ALA INSTAGRAM WEB (FLEKSIBEL SLIDER + LIVE COMMENT) -->
   <div id="igModal" class="modal-overlay hidden" onclick="handleOverlayClick(event)">
     <div class="modal-ig-container">
       <button type="button" class="close-modal" onclick="closeIgModal()" title="Tutup">&times;</button>
@@ -97,8 +97,9 @@
         <div id="carouselDots" class="carousel-dots"></div>
       </div>
 
-      <!-- SISI KANAN: HEADER, COPYWRITING & ACTION BUTTON -->
+      <!-- SISI KANAN: HEADER, COPYWRITING, LIVE COMMENT & ACTION BUTTON -->
       <div class="ig-right-content">
+        <!-- 1. Header Profil -->
         <div class="ig-user-header">
           <div class="ig-avatar">📚</div>
           <div>
@@ -107,19 +108,41 @@
           </div>
         </div>
 
-        <div id="igCopywriting" class="ig-copywriting">
-          <!-- Copywriting diinjeksi via JS -->
+        <!-- 2. Area Scrollable: Copywriting & Live Comments -->
+        <div class="ig-scrollable-body">
+          <div id="igCopywriting" class="ig-copywriting">
+            <!-- Copywriting diinjeksi via JS -->
+          </div>
+
+          <hr class="ig-divider">
+
+          <div class="ig-comments-section">
+            <div class="comments-header">
+              <strong>Ulasan & Diskusi</strong>
+              <small id="commentCount">0 komentar</small>
+            </div>
+            <div id="igCommentsList" class="ig-comments-list">
+              <!-- Daftar Komentar Injeksi via JS -->
+            </div>
+          </div>
         </div>
 
+        <!-- 3. Actions Dummy (Like, Share, Keep) -->
         <div class="ig-actions-dummy">
-          <span>❤️ Suka</span>
-          <span>💬 Ulasan</span>
+          <button type="button" id="btnLikeProduct" onclick="toggleProductLike()">❤️ <span id="productLikeCount">124</span> Suka</button>
           <span>✈️ Bagikan</span>
           <span>📌 Simpan</span>
         </div>
 
+        <!-- 4. Form Live Input Comment -->
+        <form id="igCommentForm" class="ig-comment-form" onsubmit="submitNewComment(event)">
+          <input type="text" id="commentUserInput" placeholder="Tambah ulasan/pertanyaan..." required autocomplete="off">
+          <button type="submit" class="btn-post-comment">Kirim</button>
+        </form>
+
+        <!-- 5. Footer Call to Action -->
         <div id="igModalFooter" class="ig-footer">
-          <!-- Tombol Aksi diinjeksi via JS -->
+          <!-- Tombol Pemesanan Injeksi via JS -->
         </div>
       </div>
     </div>
