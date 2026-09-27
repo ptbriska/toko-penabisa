@@ -1,6 +1,27 @@
 {
   "books": [
-    "PB-A0001"
+    "PB-A0001",
+    "PB-A0002",
+    "PB-A0003"
   ],
-  "bundling": []
+  "bundling": [
+    {
+      "sku": "PB-IB001",
+      "folder": "PB-IB001",
+      "judul_bundling": "Paket Master OSN Biologi Juara",
+      "tags": ["OSN", "Biologi", "SMA"],
+      "jenis": "Cetak",
+      "harga_bundling": 250000,
+      "items_sku": ["PB-A0001", "PB-A0002"]
+    },
+    {
+      "sku": "PB-IB002",
+      "folder": "PB-IB002",
+      "judul_bundling": "Paket E-Book Hemat Riset & AI",
+      "tags": ["Riset", "AI", "Digital"],
+      "jenis": "Ebook",
+      "harga_bundling": 99000,
+      "items_sku": ["PB-P0001", "PB-R0001"]
+    }
+  ]
 }
