@@ -88,7 +88,8 @@ function renderCategorySidebar() {
 // 5. Load Master Data Katalog dari ../index-katalog.json
 async function loadKatalogData() {
   try {
-    const res = await fetch('../index-katalog.json');
+    // Perbaikan path ke folder /data/
+    const res = await fetch('../data/index-katalog.json');
     const index = await res.json();
 
     catalogBooks = [];
