@@ -60,9 +60,9 @@ a {
   display: none !important;
 }
 
-/* NAVBAR LIGHT MODERN */
+/* NAVBAR LIGHT MODERN (ALA GRAMEDIA) */
 .navbar {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-color);
@@ -73,50 +73,99 @@ a {
   box-shadow: var(--shadow-sm);
 }
 
-.navbar-brand .logo {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: #0f172a;
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
 }
 
-.navbar-brand .logo span {
+.logo {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+.logo span {
   background: var(--brand-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.nav-menu {
+.nav-links {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.3rem;
+  white-space: nowrap;
 }
 
-.nav-menu a {
+.nav-links a {
   color: var(--text-muted);
   font-weight: 600;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.8rem;
   border-radius: var(--radius-sm);
   transition: var(--transition);
+  font-size: 0.9rem;
 }
 
-.nav-menu a:hover, .nav-menu a.active {
+.nav-links a:hover, .nav-links a.active {
   color: var(--brand-orange);
   background: #fff7ed;
 }
 
-.nav-actions {
+/* SEARCH BAR MEMANJANG IN-HEADER */
+.header-search-bar {
+  flex: 1;
+  max-width: 450px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.header-search-bar .search-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.header-search-bar input {
+  width: 100%;
+  padding: 0.55rem 1rem 0.55rem 2.4rem;
+  font-size: 0.88rem;
+  border-radius: 25px;
+  border: 1.5px solid var(--border-color);
+  background: #f8fafc;
+  color: var(--text-main);
+  outline: none;
+  transition: var(--transition);
+}
+
+.header-search-bar input:focus {
+  background: #ffffff;
+  border-color: var(--brand-orange);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
+}
+
+.nav-actions, .nav-right {
   display: flex;
   align-items: center;
   gap: 0.8rem;
+  white-space: nowrap;
 }
 
-.btn-cart-nav {
+.btn-cart-nav, .btn-cart-light {
   background: #fff7ed;
   border: 1px solid #ffedd5;
   color: var(--brand-orange);
   padding: 0.5rem 1rem;
   border-radius: 30px;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -124,13 +173,13 @@ a {
   transition: var(--transition);
 }
 
-.btn-cart-nav:hover {
+.btn-cart-nav:hover, .btn-cart-light:hover {
   background: var(--brand-orange);
   color: #ffffff;
   box-shadow: var(--shadow-md);
 }
 
-.badge {
+.badge, .badge-count {
   background: var(--brand-orange);
   color: #ffffff;
   font-size: 0.75rem;
@@ -138,12 +187,12 @@ a {
   border-radius: 20px;
 }
 
-.btn-cart-nav:hover .badge {
+.btn-cart-nav:hover .badge, .btn-cart-light:hover .badge-count {
   background: #ffffff;
   color: var(--brand-orange);
 }
 
-.btn-shortcut {
+.btn-shortcut, .btn-publisher {
   font-size: 0.85rem;
   color: var(--text-muted);
   padding: 0.45rem 0.8rem;
@@ -152,7 +201,7 @@ a {
   transition: var(--transition);
 }
 
-.btn-shortcut:hover {
+.btn-shortcut:hover, .btn-publisher:hover {
   background: #ffffff;
   border-color: var(--brand-orange);
   color: var(--brand-orange);
@@ -262,7 +311,7 @@ a {
   color: var(--text-muted);
 }
 
-/* PRODUCT CARDS (TOKOPEDIA / Amazon Style) */
+/* PRODUCT CARDS (TOKOPEDIA / AMAZON STYLE) */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -598,6 +647,18 @@ a {
 }
 
 /* RESPONSIVE DESIGN */
+@media (max-width: 992px) {
+  .nav-container {
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+  .header-search-bar {
+    order: 3;
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
 @media (max-width: 850px) {
   .catalog-container, .detail-wrapper, .cart-grid { grid-template-columns: 1fr; }
   .modal-ig-container { flex-direction: column; height: 90vh; }
