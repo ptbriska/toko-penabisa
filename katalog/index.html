@@ -78,29 +78,49 @@
     </section>
   </main>
 
-  <!-- MODAL POP-UP IG STYLE -->
-  <div id="igModal" class="modal-overlay hidden">
+  <!-- MODAL POP-UP ALA INSTAGRAM WEB (FLEKSIBEL 1 - 8+ GAMBAR) -->
+  <div id="igModal" class="modal-overlay hidden" onclick="handleOverlayClick(event)">
     <div class="modal-ig-container">
-      <button class="close-modal" onclick="closeIgModal()">&times;</button>
-      <div class="ig-left-carousel" id="igCarousel">
-        <!-- Carousel Slides -->
+      <button type="button" class="close-modal" onclick="closeIgModal()" title="Tutup">&times;</button>
+      
+      <!-- SISI KIRI: CAROUSEL SLIDER GAMBAR -->
+      <div class="ig-left-carousel">
+        <div id="carouselSlidesContainer" class="slides-wrapper">
+          <!-- Slide gambar diinjeksi via JS -->
+        </div>
+
+        <!-- Tombol Navigasi Panah (Otomatis Sembunyi jika 1 gambar) -->
+        <button type="button" id="prevSlideBtn" class="carousel-nav prev" onclick="changeSlide(-1)">&#10094;</button>
+        <button type="button" id="nextSlideBtn" class="carousel-nav next" onclick="changeSlide(1)">&#10095;</button>
+
+        <!-- Dots Indicator (Otomatis Sembunyi jika 1 gambar) -->
+        <div id="carouselDots" class="carousel-dots"></div>
       </div>
+
+      <!-- SISI KANAN: HEADER, COPYWRITING & ACTION BUTTON -->
       <div class="ig-right-content">
         <div class="ig-user-header">
-          <div class="ig-avatar">📖</div>
+          <div class="ig-avatar">📚</div>
           <div>
             <strong>Toko Pena Bisa</strong>
-            <small>Katalog Resmi</small>
+            <small>Katalog Resmi Penerbit</small>
           </div>
         </div>
-        <div id="igCopywriting" class="ig-copywriting"></div>
+
+        <div id="igCopywriting" class="ig-copywriting">
+          <!-- Copywriting diinjeksi via JS -->
+        </div>
+
         <div class="ig-actions-dummy">
           <span>❤️ Suka</span>
           <span>💬 Ulasan</span>
           <span>✈️ Bagikan</span>
           <span>📌 Simpan</span>
         </div>
-        <div id="igModalFooter"></div>
+
+        <div id="igModalFooter" class="ig-footer">
+          <!-- Tombol Aksi diinjeksi via JS -->
+        </div>
       </div>
     </div>
   </div>
