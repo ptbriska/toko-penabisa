@@ -5,48 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Toko Penerbit Pena Bisa - Toko Buku Literasi Modern</title>
   
+  <!-- Font Modern Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="css/index.css">
+  <!-- Single Global CSS -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="beranda">
 
-  <!-- NAVBAR LIGHT MODERN (DENGAN SEARCH BAR ALA GRAMEDIA) -->
-  <header class="navbar">
-    <div class="nav-container">
-      <a href="index.html" class="logo">
-        Toko <span>Pena Bisa</span>
-      </a>
-      
-      <nav class="nav-links">
-        <a href="index.html" class="active">Beranda</a>
-        <a href="katalog.html">Katalog</a>
-        <a href="bundling.html">Paket Bundling</a>
-      </nav>
-
-      <!-- KOLOM PENCARIAN UTAMA IN-HEADER -->
-      <div class="header-search-bar">
-        <span class="search-icon">🔍</span>
-        <input 
-          type="text" 
-          id="globalSearchInput" 
-          placeholder="Cari Produk, Judul Buku, atau Penulis..." 
-          onkeypress="handleGlobalSearch(event)"
-        >
-      </div>
-
-      <div class="nav-right">
-        <a href="cart.html" class="btn-cart-light">
-          🛒 Keranjang <span id="cartBadge" class="badge-count">0</span>
-        </a>
-        <a href="https://penabisa.com" target="_blank" rel="noopener" class="btn-publisher">
-          Web Utama ↗
-        </a>
-      </div>
-    </div>
-  </header>
+  <!-- MASTER HEADER MODULAR (DILOAD AUTOMATIC VIA JS) -->
+  <div id="globalHeader"></div>
 
   <!-- BANNER PROMO & HERO WRAPPER -->
   <div class="hero-wrapper">
@@ -68,7 +38,7 @@
     </section>
   </div>
 
-  <!-- INFORMASI LAYANAN -->
+  <!-- INFORMASI LAYANAN (3 CARDS) -->
   <div class="section-wrapper">
     <section class="info-grid" id="infoServicesGrid">
       <!-- Injected via JS dari data/index.json -->
@@ -90,6 +60,10 @@
     </section>
   </div>
 
+  <!-- MASTER FOOTER MODULAR (DILOAD AUTOMATIC VIA JS) -->
+  <div id="globalFooter"></div>
+
+  <!-- CORE ENGINE SCRIPT -->
   <script src="js/main.js"></script>
 </body>
 </html>
