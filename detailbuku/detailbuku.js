@@ -20,8 +20,8 @@ async function loadSharedComponents() {
       fetch('../components/footer.html')
     ]);
 
-    document.getElementById('globalHeader').innerHTML = await headerRes.text();
-    document.getElementById('globalFooter').innerHTML = await footerRes.text();
+    if (headerRes.ok) document.getElementById('globalHeader').innerHTML = await headerRes.text();
+    if (footerRes.ok) document.getElementById('globalFooter').innerHTML = await footerRes.text();
 
     const activeNav = document.getElementById('nav-katalog');
     if (activeNav) activeNav.classList.add('active');
@@ -74,18 +74,25 @@ async function initBookDetailPage() {
     document.title = `${meta.judul} - Toko Penerbit Pena Bisa`;
     document.getElementById('breadcrumbTitle').innerText = meta.judul;
     document.getElementById('bookTitle').innerText = meta.judul;
-    document.getElementById('bookAuthor').innerText = meta.penulis || 'Pena Bisa';
-    document.getElementById('bookCategoryBadge').innerText = meta.kategori || 'Umum';
+    document.getElementById('bookCategoryBadge').innerText = meta.kategori || 'Buku Reguler';
 
-    // B. Hybrid ISBN & Metadata
-    document.getElementById('isbnCetakVal').innerText = meta.isbn_cetak || 'Tidak Tersedia';
-    document.getElementById('isbnEbookVal').innerText = meta.isbn_ebook || 'Tidak Tersedia';
-    document.getElementById('tahunTerbitVal').innerText = meta.tahun_terbit || meta.tahun || '-';
+    // B. Metadata Identitas Buku Lengkap
+    document.getElementById('metaPenulisVal').innerText = meta.penulis || 'Tim Penulis Pena Bisa';
+    document.getElementById('metaPenerbitVal').innerText = meta.penerbit || 'Penerbit Pena Bisa';
+    document.getElementById('metaTebalVal').innerText = meta.tebal ? `${meta.tebal} Hlm` : '-';
+    document.getElementById('metaBeratVal').innerText = meta.berat ? `${meta.berat} gram` : '-';
+    document.getElementById('metaCetakanVal').innerText = meta.cetakan || 'HVS, Full Color / BW';
+    document.getElementById('metaUkuranVal').innerText = meta.ukuran || '19 x 26 cm';
+    document.getElementById('metaTerbitVal').innerText = meta.terbit || meta.tahun_terbit || meta.tahun || '-';
+    document.getElementById('metaSkuVal').innerText = meta.sku || meta.id || currentFolder;
+    document.getElementById('isbnCetakVal').innerText = meta.isbn_cetak || '-';
+    document.getElementById('isbnEbookVal').innerText = meta.isbn_ebook || '-';
+    document.getElementById('metaInfoLainVal').innerText = meta.informasi_lainnya || meta.catatan || '-';
 
     // C. Setup Image Gallery
     const images = landing.carousel_images && landing.carousel_images.length > 0 
       ? landing.carousel_images 
-      : ['gambardepan.png', 'gambarbelakang.png'];
+      : ['gambardepan.png'];
 
     setupGallery(bookPath, images);
 
@@ -115,11 +122,11 @@ async function initBookDetailPage() {
         btnTokped.classList.remove('hidden');
       }
 
-      const waMsg = encodeURIComponent(`Halo Admin Pena Bisa, saya mau pesan Buku Cetak: "${meta.judul}"`);
+      const waMsg = encodeURIComponent(`Halo Admin Pena Bisa, saya mau pesan Buku Cetak:\n*Judul:* ${meta.judul}\n*SKU:* ${meta.sku || currentFolder}\n*Harga:* Rp ${meta.harga_cetak.toLocaleString('id-ID')}`);
       document.getElementById('btnWaDirect').href = `https://wa.me/${WA_NUMBER}?text=${waMsg}`;
 
       document.getElementById('btnAddToCart').onclick = () => {
-        addToCart(meta.id || currentFolder, meta.judul, meta.harga_cetak, `${bookPath}/gambardepan.png`);
+        addToCart(meta.id || meta.sku || currentFolder, meta.judul, meta.harga_cetak, `${bookPath}/${images[0]}`);
       };
     }
 
@@ -135,12 +142,12 @@ async function initBookDetailPage() {
     document.getElementById('bookWrapper').classList.remove('hidden');
     document.getElementById('bookExtraSection').classList.remove('hidden');
 
-    // H. Render Initial Dummy Reviews
-    renderDummyReviews();
+    // H. Render User Reviews
+    renderRealReviews();
 
   } catch (err) {
     console.error("Gagal memuat detail buku:", err);
-    document.getElementById('detailLoading').innerHTML = '<p>Gagal memuat data metadata buku.</p>';
+    document.getElementById('detailLoading').innerHTML = '<p style="color:#ef4444;">Gagal memuat data metadata buku.</p>';
   }
 }
 
@@ -149,11 +156,15 @@ function setupGallery(basePath, images) {
   const mainBox = document.getElementById('mainImageBox');
   const thumbList = document.getElementById('thumbnailList');
 
-  mainBox.innerHTML = `<img id="mainImageDisplay" src="${basePath}/${images[0]}" alt="Sampul Utama">`;
+  mainBox.innerHTML = `<img id="mainImageDisplay" src="${basePath}/${images[0]}" alt="Sampul Utama" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x500?text=Sampul+Buku';">`;
 
-  thumbList.innerHTML = images.map((img, idx) => `
-    <img src="${basePath}/${img}" class="${idx === 0 ? 'active' : ''}" onclick="switchGalleryImg('${basePath}/${img}', this)" alt="Pratinjau ${idx + 1}">
-  `).join('');
+  if (images.length > 1) {
+    thumbList.innerHTML = images.map((img, idx) => `
+      <img src="${basePath}/${img}" class="${idx === 0 ? 'active' : ''}" onclick="switchGalleryImg('${basePath}/${img}', this)" alt="Pratinjau ${idx + 1}" onerror="this.onerror=null; this.src='https://via.placeholder.com/80x100?text=Pratinjau';">
+    `).join('');
+  } else {
+    thumbList.innerHTML = '';
+  }
 }
 
 function switchGalleryImg(fullPath, element) {
@@ -175,20 +186,28 @@ function addToCart(id, judul, harga, cover) {
 
   localStorage.setItem('penabisa_cart', JSON.stringify(cart));
   updateCartBadge();
-  alert(`"${judul}" berhasil ditambahkan ke keranjang belanja.`);
+  alert(`✅ "${judul}" berhasil ditambahkan ke keranjang belanja.`);
 }
 
-// 7. Review & Rating Handler
-function renderDummyReviews() {
+// 7. Review & Rating Handler (Transparan & Asli)
+function renderRealReviews() {
   const container = document.getElementById('reviewsList');
-  if (!container) return;
+  if (!container || !currentFolder) return;
 
-  const sampleReviews = [
-    { name: "Dr. Hendra S.", rating: "⭐⭐⭐⭐⭐", comment: "Buku terbitan yang sangat berkualitas. Penjelasan sistematis dan referensi lengkap." },
-    { name: "Anisa P.", rating: "⭐⭐⭐⭐⭐", comment: "Cetakan rapi, pengiriman dari admin WA cepat dan ramah!" }
-  ];
+  const storageKey = `penabisa_reviews_${currentFolder}`;
+  const reviews = JSON.parse(localStorage.getItem(storageKey)) || [];
 
-  container.innerHTML = sampleReviews.map(r => `
+  if (reviews.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 1.5rem; text-align: center; color: #94a3b8; font-size: 0.88rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+        💬 Belum ada ulasan untuk buku ini.<br>
+        <span style="font-size: 0.8rem; color: #cbd5e1;">Jadilah yang pertama memberikan ulasan atau kesan membaca Anda!</span>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = reviews.map(r => `
     <div class="review-item">
       <div class="review-item-header">
         <strong>${r.name}</strong>
@@ -209,21 +228,20 @@ function submitReview() {
     return;
   }
 
-  const container = document.getElementById('reviewsList');
+  if (!currentFolder) return;
+
   const stars = "⭐".repeat(parseInt(ratingVal));
+  const newReview = { name, comment, rating: stars };
 
-  const newReviewHTML = `
-    <div class="review-item" style="border-color: var(--brand-orange); background: #fff7ed;">
-      <div class="review-item-header">
-        <strong>${name}</strong>
-        <span>${stars}</span>
-      </div>
-      <p>${comment}</p>
-    </div>
-  `;
+  const storageKey = `penabisa_reviews_${currentFolder}`;
+  const existingReviews = JSON.parse(localStorage.getItem(storageKey)) || [];
+  existingReviews.unshift(newReview);
 
-  container.insertAdjacentHTML('afterbegin', newReviewHTML);
+  localStorage.setItem(storageKey, JSON.stringify(existingReviews));
+
   document.getElementById('reviewName').value = '';
   document.getElementById('reviewComment').value = '';
-  alert("Ulasan Anda berhasil dikirim!");
+
+  renderRealReviews();
+  alert("Terima kasih! Ulasan Anda telah berhasil dikirim.");
 }
