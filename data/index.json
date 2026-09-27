@@ -1,4 +1,9 @@
 {
+  "banner_promo": {
+    "image_url": "assets/banner-promo.png",
+    "alt_text": "Promo Spesial Terbitan Baru Pena Bisa",
+    "link": "katalog.html"
+  },
   "hero": {
     "badge": "📚 Penerbit Buku Literasi & Pendidikan",
     "headline": "Temukan Karya Terbaik Penulis Nusantara",
@@ -28,9 +33,33 @@
       "description": "Mendukung berbagai ekspedisi terpercaya (JNE, J&T, Pos) dengan kalkulasi ongkir transparan."
     }
   ],
-  "best_seller": {
-    "badge": "Pilihan Pembaca",
-    "title": "🔥 Buku Best Seller Utama",
-    "subtitle": "Koleksi terfavorit yang paling banyak dicari bulan ini"
-  }
+  "categories_config": {
+    "badge": "Eksplorasi Literasi",
+    "title": "🏷️ Kategori Buku Terbitan",
+    "subtitle": "Pilih bidang keilmuan dan minat baca yang Anda cari"
+  },
+  "categories": [
+    { "code": "A", "name": "Buku Perlombaan", "icon": "🏆" },
+    { "code": "B", "name": "Buku Pra Sekolah", "icon": "🧸" },
+    { "code": "C", "name": "Buku Reguler Sekolah", "icon": "🎒" },
+    { "code": "D", "name": "Buku Persiapan Ujian", "icon": "📝" },
+    { "code": "E", "name": "Buku Beasiswa", "icon": "🎓" },
+    { "code": "F", "name": "Buku Hobby", "icon": "🎨" },
+    { "code": "G", "name": "Buku Agama", "icon": "🕌" },
+    { "code": "H", "name": "Buku Desain & Multimedia", "icon": "🖥️" },
+    { "code": "I", "name": "Buku Kesehatan", "icon": "🏥" },
+    { "code": "J", "name": "Buku Sastra & Bahasa", "icon": "📚" },
+    { "code": "K", "name": "Buku Sosial & Komunikasi", "icon": "🗣️" },
+    { "code": "L", "name": "Buku Teknik", "icon": "⚙️" },
+    { "code": "M", "name": "Buku MIPA", "icon": "🔬" },
+    { "code": "N", "name": "Buku Ekonomi Bisnis", "icon": "📈" },
+    { "code": "O", "name": "Buku Ilmu Bumi", "icon": "🌍" },
+    { "code": "P", "name": "Buku Informasi Teknologi & AI", "icon": "🤖" },
+    { "code": "Q", "name": "Buku Lingkungan", "icon": "🌱" },
+    { "code": "R", "name": "Buku Riset", "icon": "📊" },
+    { "code": "S", "name": "Buku Pendidikan & Keguruan", "icon": "👨‍🏫" },
+    { "code": "T", "name": "Buku Hukum & Politik", "icon": "⚖️" },
+    { "code": "U", "name": "Buku Pengembangan Diri", "icon": "💡" },
+    { "code": "V", "name": "Buku Lainnya", "icon": "📦" }
+  ]
 }
