@@ -1,0 +1,36 @@
+{
+  "hero": {
+    "badge": "📚 Penerbit Buku Literasi & Pendidikan",
+    "headline": "Temukan Karya Terbaik Penulis Nusantara",
+    "subheadline": "Dapatkan akses mudah ke koleksi buku cetak fisik berkualitas dan e-book digital resmi ber-ISBN.",
+    "cta_primary_text": "Jelajahi Katalog",
+    "cta_primary_link": "katalog.html",
+    "cta_secondary_text": "Paket Bundling",
+    "cta_secondary_link": "bundling.html"
+  },
+  "info_services": [
+    {
+      "badge": "Legal & Resmi",
+      "icon": "📖",
+      "title": "Identitas ISBN Resmi",
+      "description": "Setiap terbitan memiliki ISBN Cetak dan/atau Digital (E-Book) resmi yang terdaftar di Perpusnas."
+    },
+    {
+      "badge": "Mudah & Cepat",
+      "icon": "🛒",
+      "title": "Transaksi Praktis",
+      "description": "Beli e-book instant via Mayar, atau rekap pesan buku cetak otomatis via WhatsApp & Marketplace."
+    },
+    {
+      "badge": "Aman & Terpercaya",
+      "icon": "🚚",
+      "title": "Pengiriman Nusantara",
+      "description": "Mendukung berbagai ekspedisi terpercaya (JNE, J&T, Pos) dengan kalkulasi ongkir transparan."
+    }
+  ],
+  "best_seller": {
+    "badge": "Pilihan Pembaca",
+    "title": "🔥 Buku Best Seller Utama",
+    "subtitle": "Koleksi terfavorit yang paling banyak dicari bulan ini"
+  }
+}
