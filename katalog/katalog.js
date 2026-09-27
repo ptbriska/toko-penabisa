@@ -89,7 +89,7 @@ function renderCategorySidebar() {
 async function loadKatalogData() {
   try {
     // Perbaikan path ke folder /data/
-    const res = await fetch('../data/index-katalog.json');
+    const res = await fetch('../index-katalog.json');
     const index = await res.json();
 
     catalogBooks = [];
