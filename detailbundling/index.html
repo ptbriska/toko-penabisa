@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Paket Bundling - Toko Penerbit Pena Bisa</title>
+
+  <!-- Font Google Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Parser Markdown CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Styling Terisolasi Detail Bundling -->
+  <link rel="stylesheet" href="detailbundling.css">
+</head>
+<body data-page="detailbundling">
+
+  <!-- Shared Header Injection Container -->
+  <div id="globalHeader"></div>
+
+  <!-- MAIN DETAIL CONTAINER -->
+  <main class="detail-container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <a href="../beranda/index.html">Beranda</a> &rsaquo;
+      <a href="../bundling/index.html">Paket Bundling</a> &rsaquo;
+      <span id="breadcrumbTitle">Detail Bundling</span>
+    </nav>
+
+    <!-- State Loading -->
+    <div id="detailLoading" class="loading-box">
+      <div class="spinner"></div>
+      <p>Memuat rincian paket bundling...</p>
+    </div>
+
+    <!-- Wrapper Detail Utama -->
+    <div id="bundlingWrapper" class="detail-wrapper hidden">
+      <!-- SISI KIRI: POSTER BUNDLING UTAMA -->
+      <div class="detail-media">
+        <div class="main-poster-box">
+          <img id="mainPosterImg" src="" alt="Poster Paket Bundling" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x500?text=Poster+Bundling';">
+        </div>
+      </div>
+
+      <!-- SISI KANAN: METADATA, REKAP WMS & OPSI PEMBELIAN -->
+      <div class="detail-info">
+        <div class="header-badges">
+          <span id="bundlingTypeBadge" class="badge-type">📚 Paket Buku Cetak</span>
+          <span id="bundlingSkuBadge" class="badge-sku">SKU: PB-IB001</span>
+        </div>
+
+        <h1 id="bundlingTitle">Judul Paket Bundling</h1>
+        
+        <div id="bundlingTagPills" class="tag-pills">
+          <!-- Tags injected via JS -->
+        </div>
+
+        <div class="price-banner">
+          <span class="label">Harga Promo Hemat:</span>
+          <strong id="bundlingPriceTag" class="price">Rp 0</strong>
+        </div>
+
+        <!-- REKAP DINAMIS DARI WMS SKU BUKU PENYUSUN -->
+        <div class="wms-rekap-box">
+          <h3>📚 Daftar Buku Dalam Paket Ini</h3>
+          <div id="wmsItemsList" class="wms-items-grid">
+            <!-- Items injected via detailbundling.js -->
+          </div>
+        </div>
+
+        <!-- ENGINE PEMBELIAN -->
+        <div class="action-card-group">
+          <!-- Opsi Mayar untuk Bundling E-Book -->
+          <div id="mayarActionBox" class="option-card hidden">
+            <a id="btnMayarDirect" href="#" target="_blank" rel="noopener" class="btn-mayar">
+              ⚡ Beli Paket E-Book Langsung (Mayar)
+            </a>
+          </div>
+
+          <!-- Opsi WA & Keranjang untuk Bundling Cetak -->
+          <div id="cetakActionBox" class="option-card hidden">
+            <a id="btnWaBundling" href="#" target="_blank" rel="noopener" class="btn-wa">
+              📱 Beli Langsung via WA Direct (CS)
+            </a>
+            <button type="button" id="btnAddToCartBundling" class="btn-cart-add">
+              🛒 + Masukkan Keranjang Belanja
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESKRIPSI & SYARAT PROMO (MARKDOWN) -->
+    <section id="bundlingExtraSection" class="detail-extra hidden">
+      <div class="extra-content-box">
+        <h2>📄 Deskripsi & Syarat Ketentuan Promo</h2>
+        <div id="bundlingMarkdownContent" class="markdown-body">
+          <!-- Rendered marked.js output -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Shared Footer Injection Container -->
+  <div id="globalFooter"></div>
+
+  <!-- Script Logic Terisolasi Detail Bundling -->
+  <script src="detailbundling.js"></script>
+</body>
+</html>
