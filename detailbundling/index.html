@@ -41,7 +41,7 @@
       <!-- SISI KIRI: POSTER BUNDLING UTAMA -->
       <div class="detail-media">
         <div class="main-poster-box">
-          <img id="mainPosterImg" src="" alt="Poster Paket Bundling" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x500?text=Poster+Bundling';">
+          <img id="mainPosterImg" src="" alt="Poster Paket Bundling">
         </div>
       </div>
 
@@ -63,9 +63,9 @@
           <strong id="bundlingPriceTag" class="price">Rp 0</strong>
         </div>
 
-        <!-- REKAP DINAMIS DARI WMS SKU BUKU PENYUSUN -->
+        <!-- REKAP DINAMIS DARI WMS SKU BUKU PENYUSUN (CLICKABLE ITEM) -->
         <div class="wms-rekap-box">
-          <h3>📚 Daftar Buku Dalam Paket Ini</h3>
+          <h3>📚 DAFTAR BUKU DALAM PAKET INI <small style="font-weight: normal; font-size: 0.75rem; color: var(--text-muted);">(Klik buku untuk lihat detail)</small></h3>
           <div id="wmsItemsList" class="wms-items-grid">
             <!-- Items injected via detailbundling.js -->
           </div>
@@ -93,12 +93,38 @@
       </div>
     </div>
 
-    <!-- DESKRIPSI & SYARAT PROMO (MARKDOWN) -->
+    <!-- SEKSI EXTRA: DESKRIPSI MD & ULASAN PEMBACA (2 KOLOM GRID) -->
     <section id="bundlingExtraSection" class="detail-extra hidden">
+      <!-- SISI KIRI: DESKRIPSI MARKDOWN -->
       <div class="extra-content-box">
         <h2>📄 Deskripsi & Syarat Ketentuan Promo</h2>
         <div id="bundlingMarkdownContent" class="markdown-body">
           <!-- Rendered marked.js output -->
+        </div>
+      </div>
+
+      <!-- SISI KANAN: ULASAN PEMBACA / PENGUNJUNG -->
+      <div class="reviews-box">
+        <h2>⭐ Ulasan Pembaca</h2>
+        
+        <div class="review-form">
+          <h4>Tuliskan Ulasan Anda</h4>
+          <div class="form-row">
+            <select id="reviewRating">
+              <option value="5">⭐⭐⭐⭐⭐ (5 / 5)</option>
+              <option value="4">⭐⭐⭐⭐ (4 / 5)</option>
+              <option value="3">⭐⭐⭐ (3 / 5)</option>
+              <option value="2">⭐⭐ (2 / 5)</option>
+              <option value="1">⭐ (1 / 5)</option>
+            </select>
+            <input type="text" id="reviewName" placeholder="Nama Lengkap / Inisial" required>
+          </div>
+          <textarea id="reviewComment" rows="3" placeholder="Tuliskan ulasan atau kesan paket bundling ini..." required></textarea>
+          <button type="button" onclick="submitBundlingReview()" class="btn-submit-review">Kirim Ulasan</button>
+        </div>
+
+        <div id="reviewsList" class="reviews-list">
+          <!-- Rendered user reviews -->
         </div>
       </div>
     </section>
