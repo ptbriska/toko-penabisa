@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beranda - Toko Penerbit Pena Bisa</title>
+  
+  <!-- Font Google Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Styling Terisolasi Beranda -->
+  <link rel="stylesheet" href="index.css">
+</head>
+<body data-page="beranda">
+
+  <!-- Shared Header Injection Container -->
+  <div id="globalHeader"></div>
+
+  <!-- Hero & Banner Promosi -->
+  <main class="beranda-main">
+    <div class="hero-wrapper">
+      <a id="bannerPromoLink" href="../katalog/index.html" class="banner-promo-container">
+        <img id="bannerPromoImg" src="banner-promo.png" alt="Banner Promosi Default">
+      </a>
+
+      <section class="hero-card">
+        <span id="heroBadge" class="badge-pill">Penerbit Literasi Modern</span>
+        <h1 id="heroHeadline">Selamat Datang di Toko Resmi Pena Bisa</h1>
+        <p id="heroSubheadline">Memuat informasi penerbitan...</p>
+
+        <div class="hero-buttons">
+          <a id="heroCtaPrimary" href="../katalog/index.html" class="btn-brand-primary">Jelajahi Katalog</a>
+          <a id="heroCtaSecondary" href="../bundling/index.html" class="btn-brand-secondary">Paket Bundling</a>
+        </div>
+      </section>
+    </div>
+
+    <!-- Info Layanan Penerbit -->
+    <div class="section-wrapper">
+      <section class="info-grid" id="infoServicesGrid">
+        <!-- Rendered by index.js -->
+      </section>
+    </div>
+
+    <!-- Kategori Pilihan -->
+    <div class="section-wrapper">
+      <section>
+        <div class="section-title-box">
+          <span class="badge-pill">Eksplorasi Literasi</span>
+          <h2>🏷️ Kategori Buku Terbitan</h2>
+          <p>Pilih bidang keilmuan dan minat baca yang Anda cari</p>
+        </div>
+
+        <div id="categoryGrid" class="category-grid">
+          <!-- Rendered by index.js -->
+        </div>
+      </section>
+    </div>
+
+    <!-- Section Preview Best Seller -->
+    <div class="section-wrapper">
+      <section>
+        <div class="section-title-box">
+          <span class="badge-pill">Rekomendasi Utama</span>
+          <h2>🔥 Buku Best Seller</h2>
+          <p>Karya populer yang paling banyak dibaca dan direkomendasikan</p>
+        </div>
+
+        <div id="bestSellerGrid" class="product-grid">
+          <!-- Rendered by index.js from index-katalog.json -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Shared Footer Injection Container -->
+  <div id="globalFooter"></div>
+
+  <!-- Script Logic Terisolasi Beranda -->
+  <script src="index.js"></script>
+</body>
+</html>
