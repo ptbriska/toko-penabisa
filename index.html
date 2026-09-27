@@ -13,7 +13,7 @@
 </head>
 <body data-page="beranda">
 
-  <!-- NAVBAR LIGHT MODERN -->
+  <!-- NAVBAR LIGHT MODERN (DENGAN SEARCH BAR ALA GRAMEDIA) -->
   <header class="navbar">
     <div class="nav-container">
       <a href="index.html" class="logo">
@@ -25,6 +25,17 @@
         <a href="katalog.html">Katalog</a>
         <a href="bundling.html">Paket Bundling</a>
       </nav>
+
+      <!-- KOLOM PENCARIAN UTAMA IN-HEADER -->
+      <div class="header-search-bar">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          id="globalSearchInput" 
+          placeholder="Cari Produk, Judul Buku, atau Penulis..." 
+          onkeypress="handleGlobalSearch(event)"
+        >
+      </div>
 
       <div class="nav-right">
         <a href="cart.html" class="btn-cart-light">
